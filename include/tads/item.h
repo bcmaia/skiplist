@@ -10,12 +10,12 @@
 
 typedef struct _item_s Item;
 
-Item *item_new(const entry_t entry);
+Item *item_new(void);
 void item_del(Item **item);
 int item_cmp(const Item *item_1, const Item *item_2);
-void item_print(Item *item);
-void item_print_word(Item *item);
-void item_print_description(Item *item);
+void item_print(const Item *item);
+void item_print_word(const Item *item);
+void item_print_description(const Item *item);
 Item *item_read(void);
 
 #endif // ITEM_H_DEFINED

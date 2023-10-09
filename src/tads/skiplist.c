@@ -33,15 +33,12 @@ static void node_deep_del(Node **node);
 // static Node *node_row_search(Node *node, const Item *item);
 
 static LinkedStackNode *linked_stack_node_new(Node *node,
-                                              LinkedStackNode *next) {
-    LinkedStackNode *lsn = (LinkedStackNode *)malloc(sizeof(LinkedStackNode));
-    if (lsn) *lsn = (LinkedStackNode){.n = node, .next = next};
-    return lsn;
-}
+                                              LinkedStackNode *next);
 
 //=============================================================================/
 //=================|    Public Function Implementations     |==================/
 //=============================================================================/
+
 
 SkipList *skiplist_new(void) {
     SkipList *skiplist = (SkipList *)malloc(sizeof(SkipList));
@@ -49,6 +46,14 @@ SkipList *skiplist_new(void) {
     return skiplist;
 }
 
+/**
+ * @brief An opinionated function to delete a skiplist (it cleans the memory
+ * used by it).
+ *
+ * @param skiplist a ptr to the skiplist.
+ *
+ * @note this will set your ptr to NULL to avoid dangling ptrs.
+ */
 void skiplist_del(SkipList **skiplist) {
     if (NULL == skiplist || NULL == (*skiplist)) return;
 
@@ -80,6 +85,16 @@ void skiplist_del(SkipList **skiplist) {
     *skiplist = NULL;
 }
 
+/**
+ * @brief This function inserts an item into the skiplist.
+ *
+ * @param skiplist a ptr to the skip list.
+ * @param item a ptr to the item.
+ * @return status_t
+ *
+ * @warning make sure the ptr are valid. NULL ptrs will be caught as errors,
+ *  but other tipe of invalid pointers will not.
+ */
 status_t skiplist_insert(SkipList *skiplist, Item *item) {
     // Err handling when null poiter
     // WARNING: other erros such as invalid ptr will not be caught.
@@ -156,9 +171,9 @@ status_t skiplist_insert(SkipList *skiplist, Item *item) {
     while ((NULL != trace) && (rand() & 1)) {
         new_node = node_new(
             (Node){.item = item, .next = trace->n->next, .down = down});
-        
+
         // TODO: error handling here (new_node might be null)
-        
+
         trace->n->next = new_node;
 
         LinkedStackNode *temp = trace->next;
@@ -198,21 +213,26 @@ status_t skiplist_insert(SkipList *skiplist, Item *item) {
     return SUCCESS;
 }
 
-void skiplist_debug_print(SkipList *skiplist) {
-    if (NULL == skiplist) return;
+void skiplist_debug_print(const SkipList *skiplist) {
+    if (NULL == skiplist) { // err handling
+        printf("ERROR: skiplist ptr is NULL. \n");
+        return;
+    }
 
     int lv = skiplist->height - 1;
-    for (Node *digger = skiplist->top; NULL != digger; digger = digger->down) { // loop
-        Node *runner = digger;
-        printf("lv %d) ", lv--);
-        while (NULL != runner) { // loop throw the nodes in a row
+
+    // Loop throw all the lanes
+    for (Node *digger = skiplist->top; NULL != digger; digger = digger->down) {
+        printf("lv %d) ", lv--); // print level index
+
+        // Loop throw a lane
+        for (Node *runner = digger; NULL != runner; runner = runner->next) {
             printf("[");
             item_print(runner->item);
             printf("]; ");
-            runner = runner->next;
         }
+
         printf("\n");
-        
     }
 }
 
@@ -320,3 +340,11 @@ static inline Node *node_shell_copy(const Node *base) {
 //     // }
 //     // return node;
 // }
+
+
+static LinkedStackNode *linked_stack_node_new(Node *node,
+                                              LinkedStackNode *next) {
+    LinkedStackNode *lsn = (LinkedStackNode *)malloc(sizeof(LinkedStackNode));
+    if (lsn) *lsn = (LinkedStackNode){.n = node, .next = next};
+    return lsn;
+}

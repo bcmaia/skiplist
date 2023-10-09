@@ -6,7 +6,10 @@
 int main () {
     int n;
     printf("How many entries: ");
-    scanf(" %d", &n);
+    if (EOF == scanf(" %d", &n) ) {
+        printf("ERROR: Cannot read. dam.");
+        return 1;
+    } 
 
     SkipList* sk = skiplist_new();
     if (NULL == sk) {

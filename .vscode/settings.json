@@ -7,6 +7,7 @@
         "__node_handle": "c",
         "random": "c",
         "iterator": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "strutils.h": "c"
     }
 }

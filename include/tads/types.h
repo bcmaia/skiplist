@@ -3,19 +3,22 @@
 
 #include "tads/constants.h"
 
+/**
+ * @brief This primitive like type should be used in function return values to
+ * convey the resulting status of the peformed operation. Use it to inform the
+ * caller that the function was a success, an error ocurred, partial failure,
+ * etc.
+ *
+ */
 typedef enum {
     SUCCESS = 0,
-    ERROR = 1,
-    NUL_ERR = 2,
-    ALLOC_ERR = 3,
-    UNRECOVERABLE = 4,
-    REPEATED_ENTRY_ERR = 5,
+    EOF_ERR = EOF,
+    ERROR,
+    NUL_ERR,
+    ALLOC_ERR,
+    UNRECOVERABLE,
+    REPEATED_ENTRY_ERR,
+    TOO_MUCH_ERR,
 } status_t;
-
-typedef struct {
-    // NOTE (b): Remember to acount for the extra '\0' character
-    char word[1 + MAX_WORD_SIZE]; 
-    char description[1 + MAX_DESCRIPTION_SIZE];
-} entry_t;
 
 #endif

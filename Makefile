@@ -66,7 +66,7 @@ CC := gcc
 CCFLAGS := -Wall -Wextra -pedantic
 LDFLAGS :=
 STD_MODE := debug
-VALGRIND_FLAGS := --leak-check=full --show-leak-kinds=all
+VALGRIND_FLAGS := --leak-check=full --show-leak-kinds=all -s
 
 
 
