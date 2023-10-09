@@ -39,13 +39,37 @@ struct _skiplist_s {
 //=============================================================================/
 //=================|    Private Function Declarations     |====================/
 //=============================================================================/
+/**
+ * @brief Creates a heap allocated skiplist node based on a stack allocated skip
+ * list.
+ *
+ * @param base a stack allocated node that will be copied into the heap.
+ * @return Node* ptr to the heap allocated node, WITH OWNERSHIP, or NULL on
+ * error.
+ */
 static Node *node_new(const Node base);
-static void node_shallow_del(Node **node);
-static void node_deep_del(Node **node);
-// static Node* node_shallow_copy(const Node* base);
-// static inline Node *node_shell_copy(const Node *base);
 
-// static Node *node_row_search(Node *node, const Item *item);
+/**
+ * @brief frees the memory used to store a node on the heap without freeing
+ the
+ *  memory used to store the node contents.
+ * @warning if item is not freed elsewhere, this function will cause a memory
+ *  leak.
+ *
+ * @param node
+ */
+static void node_shallow_del(Node **node);
+
+/**
+ * @brief frees the memory used to store a node and its contetns.
+ * @warning if item is used elsewhere after a node containing a reference
+ *  to it if deleted using this function, a segfault by dangling ptr access may
+ *  ocur.
+ *  leak.
+ *
+ * @param node
+ */
+static void node_deep_del(Node **node);
 
 /**
  * @brief Creates a linked list stack node.
@@ -55,32 +79,25 @@ static void node_deep_del(Node **node);
  * @return LinkedStackNode* ptr to the new LinkedStackNode, WITH OWNERSHIP, or
  * NULL on error.
  */
-static LinkedStackNode *linked_stack_node_new(Node *node,
-                                              LinkedStackNode *next);
+static LinkedStackNode *
+linked_stack_node_new(Node *node, LinkedStackNode *next);
+
+static inline Node *mainlane_search(Node *sentinel, const Item *item);
+
+static inline Node *fastlane_search(Node *sentinel, const Item *item);
+
+static inline Node *express_search(Node *sentinel, const Item *item);
 
 //=============================================================================/
 //=================|    Public Function Implementations     |==================/
 //=============================================================================/
-/**
- * @brief Creates a new heap-allocated empty skiplist.
- *
- * @return SkipList* ptr to the skip list, WITH OWNERSHIP, or NULL in case of
- * error.
- */
+
 SkipList *skiplist_new(void) {
     SkipList *skiplist = (SkipList *)malloc(sizeof(SkipList));
     if (skiplist) *skiplist = (SkipList){0};
     return skiplist;
 }
 
-/**
- * @brief An opinionated function to delete a skiplist (it cleans the memory
- * used by it).
- *
- * @param skiplist a ptr to the skiplist.
- *
- * @note this will set your ptr to NULL to avoid dangling ptrs.
- */
 void skiplist_del(SkipList **skiplist) {
     if (NULL == skiplist || NULL == (*skiplist)) return;
 
@@ -112,18 +129,6 @@ void skiplist_del(SkipList **skiplist) {
     *skiplist = NULL;
 }
 
-/**
- * @brief This function inserts an item into the skiplist.
- *
- * @param skiplist a ptr to the skip list.
- * @param item a ptr to the item.
- * @return status_t
- *
- * @warning make sure the ptr are valid. NULL ptrs will be caught as errors,
- *  but other tipe of invalid pointers will not.
- *
- * @note it uses rand as source of randomness.
- */
 status_t skiplist_insert(SkipList *skiplist, Item *item) {
     // Err handling when null poiter
     // WARNING: other erros such as invalid ptr will not be caught.
@@ -198,11 +203,17 @@ status_t skiplist_insert(SkipList *skiplist, Item *item) {
 
     Node *down = new_node;
     while ((NULL != trace) && (rand() & 1)) {
+        // clang-format off
         new_node = node_new(
-            (Node){.item = item, .next = trace->n->next, .down = down});
+            (Node){
+                .item = item, 
+                .next = trace->n->next, 
+                .down = down
+            }
+        );
+        // clang-format on
 
         // TODO: error handling here (new_node might be null)
-
         trace->n->next = new_node;
 
         LinkedStackNode *temp = trace->next;
@@ -213,19 +224,22 @@ status_t skiplist_insert(SkipList *skiplist, Item *item) {
         down = new_node;
     }
 
-// Raise level
-#ifdef SKIPLIST_MAX_HEIGHT
-    _Bool raise_level = ((NULL == trace) && (rand() & 1) &&
-                         (skiplist_height(skiplist) < SKIPLIST_MAX_HEIGHT));
-#else
-    _Bool raise_level = ((NULL == trace) && (rand() & 1));
-#endif
+    // Raise level
+    // clang-format off
+    #ifdef SKIPLIST_MAX_HEIGHT
+        _Bool raise_level =
+            ((NULL == trace) && (rand() & 1) &&
+            (skiplist_height(skiplist) < SKIPLIST_MAX_HEIGHT));
+    #else
+        _Bool raise_level = ((NULL == trace) && (rand() & 1));
+    #endif
+    // clang-format on
 
     if (raise_level) {
         new_node = node_new((Node){.item = item, .next = NULL, .down = down});
-        skiplist->top = node_new((Node){.item = skiplist->top->item,
-                                        .next = new_node,
-                                        .down = skiplist->top});
+        skiplist->top = node_new((Node
+        ){.item = skiplist->top->item, .next = new_node, .down = skiplist->top}
+        );
         skiplist->height++;
     }
 
@@ -241,12 +255,6 @@ status_t skiplist_insert(SkipList *skiplist, Item *item) {
     return SUCCESS;
 }
 
-/**
- * @brief prints all the levels of the skiplist and some debug info. Use it to
- * aid debugging.
- *
- * @param skiplist ptr to the skiplist.
- */
 void skiplist_debug_print(const SkipList *skiplist) {
     if (NULL == skiplist) { // err handling
         printf("ERROR: skiplist ptr is NULL. \n");
@@ -278,7 +286,7 @@ void skiplist_debug_print(const SkipList *skiplist) {
  * @return Item* NULL if nothing is found or, if founded, a ptr to the item
  * WITHOUT OWNERSHIP.
  */
-Item *skiplist_search(SkipList *skiplist, Item *item) {
+Item *skiplist_search(const SkipList *skiplist, const Item *item) {
     // Err handling when null poiter
     // WARNING: other erros such as invalid ptr will not be caught.
     if (NULL == skiplist || NULL == item) return NULL;
@@ -306,47 +314,52 @@ Item *skiplist_search(SkipList *skiplist, Item *item) {
     return found_it ? sentinel->item : NULL;
 }
 
+// Temporary disable the "-Wunused-parameter" warning.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
+_Bool skiplist_is_full(const SkipList *skiplist) {
+    // clang-format off
+    #ifdef SKIPLIST_MAX_LENGTH
+        #define aaaa
+        return skiplist ? SKIPLIST_MAX_LENGTH <= skiplist->length : 0;
+    #else
+        return 0;
+    #endif // SKIPLIST_MAX_LENGTH
+    // clang-format on
+}
+
+// restoring the diagnostic stack to its previous state.
+#pragma GCC diagnostic pop
+
+_Bool skiplist_is_empty(const SkipList *skiplist) {
+    return skiplist ? 0 >= skiplist->length : 0;
+}
+
+size_t skiplist_length(const SkipList *skiplist) {
+    return skiplist ? skiplist->length : 0;
+}
+
+size_t skiplist_height(const SkipList *skiplist) {
+    return skiplist ? skiplist->height : 0;
+}
+
 //=============================================================================/
 //=================|    Private Function Implementations    |==================/
 //=============================================================================/
-/**
- * @brief Creates a heap allocated skiplist node based on a stack allocated skip
- * list.
- *
- * @param base a stack allocated node that will be copied into the heap.
- * @return Node* ptr to the heap allocated node, WITH OWNERSHIP, or NULL on
- * error.
- */
+
 static Node *node_new(const Node base) {
     Node *n = (Node *)malloc(sizeof(Node)); // mem alloc
     if (n) *n = base;                       // if no error, init
     return n;                               // return ptr, might be null
 }
 
-/**
- * @brief frees the memory used to store a node on the heap without freeing
- the
- *  memory used to store the node contents.
- * @warning if item is not freed elsewhere, this function will cause a memory
- *  leak.
- *
- * @param node
- */
 static void node_shallow_del(Node **node) {
     if (NULL == node) return;
     free(*node);
     *node = NULL;
 }
 
-/**
- * @brief frees the memory used to store a node and its contetns.
- * @warning if item is used elsewhere after a node containing a reference
- *  to it if deleted using this function, a segfault by dangling ptr access may
- *  ocur.
- *  leak.
- *
- * @param node
- */
 static void node_deep_del(Node **node) {
     if (NULL == node) return;
     item_del(&(*node)->item);
@@ -354,49 +367,61 @@ static void node_deep_del(Node **node) {
     *node = NULL;
 }
 
-// Node* node_shallow_copy(const Node* base) {
-//     return base ? node_new((Node){
-//         .item = base->item,
-//         .next = base->next,
-//         .down = base->down
-//     }) : NULL;
-// }
-
-//
-// static inline Node *node_shell_copy(const Node *base) {
-//     // WARNING: We assume (base != NULL)
-//     return node_new((Node){
-//         .item = base->item,
-//     });
-// }
-
-/**
- * @brief
- *
- * @param node a valid pointer to a node.
- * @param item
- * @return Node*
- *
- * @note This function assumes that both node and item are valid pointers.
- *  Dangling pointers, null pointer, incorrect casted pointers may cause it to
- *  miss behave.
- */
-// static Node* node_row_search (Node* node, const Item* item) {
-//     // NOTE (b): err handling would be reduntand here. Lets assume it works.
-//     // if (NULL == node || NULL == item) return NULL;
-
-//     // Node* last = node;
-//     // Node* n
-//     // while (NULL != node && item_cmp(node->item, item) < 0) {
-//     //     node = node->next;
-//     // }
-//     // return node;
-// }
-
-
-static LinkedStackNode *linked_stack_node_new(Node *node,
-                                              LinkedStackNode *next) {
+static LinkedStackNode *
+linked_stack_node_new(Node *node, LinkedStackNode *next) {
     LinkedStackNode *lsn = (LinkedStackNode *)malloc(sizeof(LinkedStackNode));
     if (lsn) *lsn = (LinkedStackNode){.n = node, .next = next};
     return lsn;
+}
+
+Node *skiplist_node_search(const SkipList *skiplist, const Item *item) {
+    // Err handling when null poiter
+    // WARNING: other erros such as invalid ptr will not be caught.
+    if (NULL == skiplist || NULL == item) return NULL;
+
+    // Declarations and initializations
+    Node *sentinel = skiplist->top;
+
+    // Trivial case: empty list
+    if (NULL == sentinel) return NULL;
+
+    // Search in fast lanes
+    while (sentinel->down) { // while sentinel.level > 0
+        while (sentinel->next && item_cmp(sentinel->next->item, item) < 0) {
+            sentinel = sentinel->next;
+        }
+        sentinel = sentinel->down;
+    }
+
+    // Search in main lane
+    while (sentinel && item_cmp(sentinel->item, item) < 0) {
+        sentinel = sentinel->next;
+    }
+
+    _Bool found_it = sentinel && 0 == item_cmp(sentinel->item, item);
+    return found_it ? sentinel : NULL;
+}
+
+static inline Node *mainlane_search(Node *sentinel, const Item *item) {
+    // WARNING: We assume `NULL != sentinel` and `NULL != item`
+    while (sentinel && item_cmp(sentinel->item, item) < 0) {
+        sentinel = sentinel->next;
+    }
+    return sentinel;
+}
+
+static inline Node *fastlane_search(Node *sentinel, const Item *item) {
+    // WARNING: We assume `NULL != sentinel` and `NULL != item`
+    while (sentinel->next && item_cmp(sentinel->next->item, item) < 0) {
+        sentinel = sentinel->next;
+    }
+    return sentinel;
+}
+
+static inline Node *express_search(Node *sentinel, const Item *item) {
+    // WARNING: We assume `NULL != sentinel` and `NULL != item`
+    while (sentinel->down) { // while sentinel.level > 0
+        sentinel = fastlane_search(sentinel, item)->down;
+    }
+    return sentinel;
 }
