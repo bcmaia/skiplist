@@ -8,7 +8,8 @@ typedef enum {
     ERROR = 1,
     NUL_ERR = 2,
     ALLOC_ERR = 3,
-    REPEATED_ENTRY_ERR = 4,
+    UNRECOVERABLE = 4,
+    REPEATED_ENTRY_ERR = 5,
 } status_t;
 
 typedef struct {

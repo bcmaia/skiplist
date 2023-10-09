@@ -25,7 +25,7 @@ struct _skiplist_s {
 //=================|    Private Function Declarations     |====================/
 //=============================================================================/
 static Node *node_new(const Node base);
-// static void node_shallow_del(Node **node);
+static void node_shallow_del(Node **node);
 static void node_deep_del(Node **node);
 // static Node* node_shallow_copy(const Node* base);
 // static inline Node *node_shell_copy(const Node *base);
@@ -50,19 +50,34 @@ SkipList *skiplist_new(void) {
 }
 
 void skiplist_del(SkipList **skiplist) {
-    if (NULL == skiplist) return;
+    if (NULL == skiplist || NULL == (*skiplist)) return;
 
-    Node *row = (*skiplist)->top;
-    while (NULL != row) {           // loop throw the rows
-        Node *temp_row = row->down; // temp ptr
-        Node *i = row;
-        while (NULL != i) {         // loop throw the nodes in a row
-            Node *temp_i = i->next; // temp ptr
-            node_deep_del(&i);
-            i = temp_i; // go to next
+    // Freeing the fast lanes
+    // NOTE (b): titanic will will sink, and the car will drive
+    Node *titanic = (*skiplist)->top;
+    while (NULL != titanic && NULL != titanic->down) { // loop throw the rows
+        Node *temp_titanic = titanic->down;            // temp ptr
+        Node *car = titanic;
+        while (NULL != car) {           // loop throw the nodes in a row
+            Node *temp_car = car->next; // temp ptr
+            node_shallow_del(&car);
+            car = temp_car; // go to next
         }
-        row = temp_row; // go to bellow
+        titanic = temp_titanic; // go to bellow
     }
+
+    // Freeing the main lane
+    // NOTE: now, titanic reachs the botom and slides across the barren sea
+    // botom,
+    //  the end is near.
+    while (NULL != titanic) {               // loop throw the nodes in a row
+        Node *temp_titanic = titanic->next; // temp ptr
+        node_deep_del(&titanic);
+        titanic = temp_titanic; // go to bellow
+    }
+
+    free(*skiplist);
+    *skiplist = NULL;
 }
 
 status_t skiplist_insert(SkipList *skiplist, Item *item) {
@@ -84,14 +99,21 @@ status_t skiplist_insert(SkipList *skiplist, Item *item) {
         return SUCCESS;
     }
 
-    // Trivial inse: insert at start
-    if (item_cmp(sentinel->item, item) < 0) {
+    // Trivial case: item is the same to start
+    int diff = item_cmp(sentinel->item, item);
+    if (0 == diff) return REPEATED_ENTRY_ERR;
+
+    // Trivial case: insert at start
+    if (diff > 0) {
         Node *up = node_new((Node){.item = item, .next = sentinel});
+        if (NULL == up) return ALLOC_ERR;
         skiplist->top = up;
         sentinel = sentinel->down;
 
         while (NULL != sentinel) {
             Node *new_node = node_new((Node){.item = item, .next = sentinel});
+            // TODO: Error handling here
+            // if (NULL == new_node)
             up->down = new_node;
             up = new_node;
         }
@@ -134,6 +156,9 @@ status_t skiplist_insert(SkipList *skiplist, Item *item) {
     while ((NULL != trace) && (rand() & 1)) {
         new_node = node_new(
             (Node){.item = item, .next = trace->n->next, .down = down});
+        
+        // TODO: error handling here (new_node might be null)
+        
         trace->n->next = new_node;
 
         LinkedStackNode *temp = trace->next;
@@ -176,9 +201,10 @@ status_t skiplist_insert(SkipList *skiplist, Item *item) {
 void skiplist_debug_print(SkipList *skiplist) {
     if (NULL == skiplist) return;
 
-    Node *digger = skiplist->top;
-    while (NULL != digger) { // loop
+    int lv = skiplist->height - 1;
+    for (Node *digger = skiplist->top; NULL != digger; digger = digger->down) { // loop
         Node *runner = digger;
+        printf("lv %d) ", lv--);
         while (NULL != runner) { // loop throw the nodes in a row
             printf("[");
             item_print(runner->item);
@@ -186,7 +212,7 @@ void skiplist_debug_print(SkipList *skiplist) {
             runner = runner->next;
         }
         printf("\n");
-        digger = digger->down;
+        
     }
 }
 
@@ -227,19 +253,19 @@ static Node *node_new(const Node base) {
     return n;                               // return ptr, might be null
 }
 
-// /**
-//  * @brief frees the memory used to store a node on the heap without freeing
-//  the
-//  *  memory used to store the node contents.
-//  * @warning if item is not freed elsewhere, this function will cause a memory
-//  *  leak.
-//  *
-//  * @param node
-//  */
-// static void node_shallow_del(Node **node) {
-//     free(*node);
-//     *node = NULL;
-// }
+/**
+ * @brief frees the memory used to store a node on the heap without freeing
+ the
+ *  memory used to store the node contents.
+ * @warning if item is not freed elsewhere, this function will cause a memory
+ *  leak.
+ *
+ * @param node
+ */
+static void node_shallow_del(Node **node) {
+    free(*node);
+    *node = NULL;
+}
 
 /**
  * @brief frees the memory used to store a node and its contetns.

@@ -9,17 +9,23 @@ int main () {
     scanf(" %d", &n);
 
     SkipList* sk = skiplist_new();
+    if (NULL == sk) {
+        printf("ERROR: Could not create the skiplist");
+        return 1;
+    } 
     for (int i = 0; i < n; i++) {
-        printf("\nWrite an entry: ");
+        printf("Write an entry: ");
         Item* item = item_read();
-        skiplist_insert(sk, item);
+        if (SUCCESS != skiplist_insert(sk, item)) { // err hanling
+            item_del(&item); 
+        }
     }
 
-    printf("\nSkiplist is: ");
-    skiplist_debug_print(sk); // infinity recursion error here
+    printf("\nSkiplist is: \n");
+    skiplist_debug_print(sk);
 
     skiplist_del(&sk);
-    printf("\nAll Done!\n");
+    printf("\nAll Done! (%p) \n", (void*)sk);
 
     return 0;
 }

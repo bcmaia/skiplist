@@ -11,6 +11,9 @@ Item *item_new(const entry_t entry) {
 }
 
 void item_del(Item **item) {
+#if DEBUG
+    printf("DELETING [%s] \n", (*item)->val.word);
+#endif
     free(*item);
     *item = NULL;
 }
