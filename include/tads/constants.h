@@ -1,0 +1,10 @@
+#ifndef CONSTANTS_H_INCLUDED
+#define CONSTANTS_H_INCLUDED
+
+#define MAX_WORD_SIZE (50)
+#define MAX_DESCRIPTION_SIZE (140)
+
+#define WORD_SCN " %50s"
+#define DESCRIPTION_SCN " %140[^\n]%*c"
+
+#endif // CONSTANTS_H_INCLUDED

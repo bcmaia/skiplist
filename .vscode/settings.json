@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "item.h": "c",
+        "types.h": "c",
+        "stdlib.h": "c",
+        "chrono": "c",
+        "__node_handle": "c",
+        "random": "c",
+        "iterator": "c",
+        "string.h": "c"
+    }
+}
