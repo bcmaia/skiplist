@@ -1,24 +1,39 @@
+/**
+ * @file skiplist.c
+ * @brief Implementation of a Skip List data structure.
+ */
+
 #include "tads/skiplist.h"
 
 //=============================================================================/
 //=================|    Data Structures     |==================================/
 //=============================================================================/
 
+/**
+ * @brief Node structure used in the Skip List.
+ */
 typedef struct _node_s {
     Item *item;
     struct _node_s *next;
     struct _node_s *down;
 } Node;
 
+/**
+ * @brief Node structure used in a linked list stack for tracing nodes in
+ * levels.
+ */
 typedef struct _linked_stack_node_s {
     Node *n;
     struct _linked_stack_node_s *next;
 } LinkedStackNode;
 
+/**
+ * @brief Skip List data structure.
+ */
 struct _skiplist_s {
     Node *top;
-    long long unsigned length;
-    unsigned height;
+    size_t length;
+    size_t height;
 };
 
 //=============================================================================/
@@ -32,14 +47,26 @@ static void node_deep_del(Node **node);
 
 // static Node *node_row_search(Node *node, const Item *item);
 
+/**
+ * @brief Creates a linked list stack node.
+ *
+ * @param node ptr which will be stored in this linked list node.
+ * @param next ptr to the next linked list node.
+ * @return LinkedStackNode* ptr to the new LinkedStackNode, WITH OWNERSHIP, or
+ * NULL on error.
+ */
 static LinkedStackNode *linked_stack_node_new(Node *node,
                                               LinkedStackNode *next);
 
 //=============================================================================/
 //=================|    Public Function Implementations     |==================/
 //=============================================================================/
-
-
+/**
+ * @brief Creates a new heap-allocated empty skiplist.
+ *
+ * @return SkipList* ptr to the skip list, WITH OWNERSHIP, or NULL in case of
+ * error.
+ */
 SkipList *skiplist_new(void) {
     SkipList *skiplist = (SkipList *)malloc(sizeof(SkipList));
     if (skiplist) *skiplist = (SkipList){0};
@@ -94,6 +121,8 @@ void skiplist_del(SkipList **skiplist) {
  *
  * @warning make sure the ptr are valid. NULL ptrs will be caught as errors,
  *  but other tipe of invalid pointers will not.
+ *
+ * @note it uses rand as source of randomness.
  */
 status_t skiplist_insert(SkipList *skiplist, Item *item) {
     // Err handling when null poiter
@@ -186,11 +215,10 @@ status_t skiplist_insert(SkipList *skiplist, Item *item) {
 
 // Raise level
 #ifdef SKIPLIST_MAX_HEIGHT
-    unsigned char raise_level =
-        ((NULL == trace) && (rand() & 1) &&
-         (skiplist_height(skiplist) < SKIPLIST_MAX_HEIGHT));
+    _Bool raise_level = ((NULL == trace) && (rand() & 1) &&
+                         (skiplist_height(skiplist) < SKIPLIST_MAX_HEIGHT));
 #else
-    unsigned char raise_level = ((NULL == trace) && (rand() & 1));
+    _Bool raise_level = ((NULL == trace) && (rand() & 1));
 #endif
 
     if (raise_level) {
@@ -213,6 +241,12 @@ status_t skiplist_insert(SkipList *skiplist, Item *item) {
     return SUCCESS;
 }
 
+/**
+ * @brief prints all the levels of the skiplist and some debug info. Use it to
+ * aid debugging.
+ *
+ * @param skiplist ptr to the skiplist.
+ */
 void skiplist_debug_print(const SkipList *skiplist) {
     if (NULL == skiplist) { // err handling
         printf("ERROR: skiplist ptr is NULL. \n");
@@ -236,6 +270,14 @@ void skiplist_debug_print(const SkipList *skiplist) {
     }
 }
 
+/**
+ * @brief Searched for an item in the skiplist.
+ *
+ * @param skiplist ptr to the skiplist.
+ * @param item ptr to the item.
+ * @return Item* NULL if nothing is found or, if founded, a ptr to the item
+ * WITHOUT OWNERSHIP.
+ */
 Item *skiplist_search(SkipList *skiplist, Item *item) {
     // Err handling when null poiter
     // WARNING: other erros such as invalid ptr will not be caught.
@@ -260,13 +302,21 @@ Item *skiplist_search(SkipList *skiplist, Item *item) {
         sentinel = sentinel->next;
     }
 
-    unsigned char found_it = sentinel && 0 == item_cmp(sentinel->item, item);
+    _Bool found_it = sentinel && 0 == item_cmp(sentinel->item, item);
     return found_it ? sentinel->item : NULL;
 }
 
 //=============================================================================/
 //=================|    Private Function Implementations    |==================/
 //=============================================================================/
+/**
+ * @brief Creates a heap allocated skiplist node based on a stack allocated skip
+ * list.
+ *
+ * @param base a stack allocated node that will be copied into the heap.
+ * @return Node* ptr to the heap allocated node, WITH OWNERSHIP, or NULL on
+ * error.
+ */
 static Node *node_new(const Node base) {
     Node *n = (Node *)malloc(sizeof(Node)); // mem alloc
     if (n) *n = base;                       // if no error, init
@@ -283,6 +333,7 @@ static Node *node_new(const Node base) {
  * @param node
  */
 static void node_shallow_del(Node **node) {
+    if (NULL == node) return;
     free(*node);
     *node = NULL;
 }
@@ -297,6 +348,7 @@ static void node_shallow_del(Node **node) {
  * @param node
  */
 static void node_deep_del(Node **node) {
+    if (NULL == node) return;
     item_del(&(*node)->item);
     free(*node);
     *node = NULL;
@@ -311,12 +363,12 @@ static void node_deep_del(Node **node) {
 // }
 
 //
-static inline Node *node_shell_copy(const Node *base) {
-    // WARNING: We assume (base != NULL)
-    return node_new((Node){
-        .item = base->item,
-    });
-}
+// static inline Node *node_shell_copy(const Node *base) {
+//     // WARNING: We assume (base != NULL)
+//     return node_new((Node){
+//         .item = base->item,
+//     });
+// }
 
 /**
  * @brief

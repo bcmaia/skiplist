@@ -6,6 +6,9 @@
 #include "tads/types.h"
 #include "tads/item.h"
 
+// TODO
+// 1. Define skiplist_len() and use it on insert validation
+
 // NOTE (b): If no SKIPLIST_MAX_HEIGHT is defined, tha we assume the skiplist
 // can grow forever. This is not actualy that bad. Because of how probability
 // works, it will likely not reach the skies.

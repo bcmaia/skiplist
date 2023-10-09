@@ -86,7 +86,7 @@ ECHO := echo
 MODE := $(STD_MODE)
 TARGET_ROOT_DIR := target
 
-DEBUG_CCFLAGS := -O0 -g -ggdb3 -DDEBUG
+DEBUG_CCFLAGS := -O0 -g -ggdb3 -DDEBUG -std=C23
 RELEASE_CCFLAGS := -O3 -DNDEBUG -pedantic -Werror -DRELEASE
 
 ifneq ($(wildcard bundle-force-release.txt),)

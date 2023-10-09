@@ -1,9 +1,14 @@
 
 #include <stdio.h>
+#include <time.h>
+
 #include "tads/item.h"
 #include "tads/skiplist.h"
 
 int main () {
+    // Randomize
+    srand(time(NULL));
+
     int n;
     printf("How many entries: ");
     if (EOF == scanf(" %d", &n) ) {

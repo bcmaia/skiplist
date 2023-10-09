@@ -33,11 +33,11 @@ void strutils_consume_spaces(void) {
     if (EOF != c && !strutils_isspace(c)) ungetc(c, stdin);
 }
 
-char strutils_isspace(const char c) {
+_Bool strutils_isspace(const char c) {
     return (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\v' ||
             c == '\f');
 }
 
-char strutils_isspace_not_newline(const char c) {
+_Bool strutils_isspace_not_newline(const char c) {
     return (c == ' ' || c == '\t' || c == '\r' || c == '\v' || c == '\f');
 }

@@ -25,9 +25,6 @@ struct _item_s {
     entry_t val;
 };
 
-// NOTE: This will be important to detect overflows in item_read;
-const char ITEM_READ_CANARY = -2;
-
 //============================================================================//
 //=================|    Private Function Declarations    |====================//
 //============================================================================//
