@@ -16,7 +16,7 @@ int main () {
     }
 
     printf("\nSkiplist is: ");
-    skiplist_debug_print(sk);
+    skiplist_debug_print(sk); // infinity recursion error here
 
     skiplist_del(&sk);
     printf("\nAll Done!\n");
