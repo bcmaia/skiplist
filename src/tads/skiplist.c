@@ -88,6 +88,8 @@ static inline Node *fastlane_search(Node *sentinel, const Item *item);
 
 static inline Node *express_search(Node *sentinel, const Item *item);
 
+static inline void undo_insert_at_start(SkipList *sl);
+
 //=============================================================================/
 //=================|    Public Function Implementations     |==================/
 //=============================================================================/
@@ -154,15 +156,23 @@ status_t skiplist_insert(SkipList *skiplist, Item *item) {
 
     // Trivial case: insert at start
     if (diff > 0) {
+        // NOTE (b): Sentinel is equal to top for now.
         Node *up = node_new((Node){.item = item, .next = sentinel});
         if (NULL == up) return ALLOC_ERR;
         skiplist->top = up;
         sentinel = sentinel->down;
 
-        while (NULL != sentinel) {
+        // Loop from top to botom
+        for (; NULL != sentinel; sentinel = sentinel->down) {
             Node *new_node = node_new((Node){.item = item, .next = sentinel});
             // TODO: Error handling here
-            // if (NULL == new_node)
+            if (NULL == new_node) {
+                node_shallow_del(&new_node);
+                undo_insert_at_start(skiplist);
+                // WARNING: the caller is responsable for freeing the item
+                // memory.
+                return ALLOC_ERR;
+            }
             up->down = new_node;
             up = new_node;
         }
@@ -171,13 +181,9 @@ status_t skiplist_insert(SkipList *skiplist, Item *item) {
     }
 
     // Search in fast lanes
-    while (NULL != sentinel->down) { // while sentinel.level > 0
-        // predecessor = NULL;
-        while (sentinel->next && item_cmp(sentinel->next->item, item) < 0) {
-            sentinel = sentinel->next;
-        }
+    for (; NULL != sentinel->down; sentinel = sentinel->down) {
+        sentinel = fastlane_search(sentinel, item);
         trace = linked_stack_node_new(sentinel, trace);
-        sentinel = sentinel->down;
     }
 
     // Search in main lane
@@ -298,17 +304,10 @@ Item *skiplist_search(const SkipList *skiplist, const Item *item) {
     if (NULL == sentinel) return NULL;
 
     // Search in fast lanes
-    while (sentinel->down) { // while sentinel.level > 0
-        while (sentinel->next && item_cmp(sentinel->next->item, item) < 0) {
-            sentinel = sentinel->next;
-        }
-        sentinel = sentinel->down;
-    }
+    sentinel = express_search(sentinel, item);
 
     // Search in main lane
-    while (sentinel && item_cmp(sentinel->item, item) < 0) {
-        sentinel = sentinel->next;
-    }
+    sentinel = mainlane_search(sentinel, item);
 
     _Bool found_it = sentinel && 0 == item_cmp(sentinel->item, item);
     return found_it ? sentinel->item : NULL;
@@ -386,17 +385,10 @@ Node *skiplist_node_search(const SkipList *skiplist, const Item *item) {
     if (NULL == sentinel) return NULL;
 
     // Search in fast lanes
-    while (sentinel->down) { // while sentinel.level > 0
-        while (sentinel->next && item_cmp(sentinel->next->item, item) < 0) {
-            sentinel = sentinel->next;
-        }
-        sentinel = sentinel->down;
-    }
+    sentinel = express_search(sentinel, item);
 
     // Search in main lane
-    while (sentinel && item_cmp(sentinel->item, item) < 0) {
-        sentinel = sentinel->next;
-    }
+    sentinel = mainlane_search(sentinel, item);
 
     _Bool found_it = sentinel && 0 == item_cmp(sentinel->item, item);
     return found_it ? sentinel : NULL;
@@ -424,4 +416,16 @@ static inline Node *express_search(Node *sentinel, const Item *item) {
         sentinel = fastlane_search(sentinel, item)->down;
     }
     return sentinel;
+}
+
+static inline void undo_insert_at_start(SkipList *sl) {
+    Node *sentinel = sl->top;
+    sl->top = sl->top->next;
+
+    // Freeing all allocated memory
+    while (sentinel) {
+        Node *temp_sentinel = sentinel->down;
+        node_shallow_del(&sentinel);
+        sentinel = temp_sentinel;
+    }
 }

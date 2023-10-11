@@ -1,3 +1,15 @@
+/**
+ * @file skiplist.h
+ * @author Bernardo M. C. (b), (bernardomc@usp.br, bcmaiax@gmail.com)
+ * @brief this header declares a abstract data structure `skiplist` and the
+ * functions that can be used with it.
+ * @version 0.1
+ * @date 2023-10-09
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
+
 #ifndef SKIPLIST_H_DEFINED
 #define SKIPLIST_H_DEFINED
 

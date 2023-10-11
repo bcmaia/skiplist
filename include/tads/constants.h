@@ -17,6 +17,6 @@
 
 // This defines how an overflow in the read description process should be
 // handled.
-#define RECOVER_FROM_BIG_INPUT (0)
+#define RECOVER_FROM_BIG_INPUT (1)
 
 #endif // CONSTANTS_H_INCLUDED
