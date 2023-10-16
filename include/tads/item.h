@@ -28,5 +28,7 @@ void item_print(const Item *item);
 void item_print_word(const Item *item);
 void item_print_description(const Item *item);
 Item *item_read(void);
+Item *item_read_word(void);
+int item_char_cmp (const Item* item, const char c);
 
 #endif // ITEM_H_DEFINED

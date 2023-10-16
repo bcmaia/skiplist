@@ -12,8 +12,8 @@
 #ifndef CONSTANTS_H_INCLUDED
 #define CONSTANTS_H_INCLUDED
 
-#define MAX_WORD_SIZE (3)
-#define MAX_DESCRIPTION_SIZE (3)
+#define MAX_WORD_SIZE (50)
+#define MAX_DESCRIPTION_SIZE (140)
 
 // This defines how an overflow in the read description process should be
 // handled.

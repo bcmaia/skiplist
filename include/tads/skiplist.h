@@ -79,6 +79,8 @@ void skiplist_del(SkipList **skiplist);
  */
 status_t skiplist_insert(SkipList *skiplist, Item *item);
 
+Item *skiplist_remove(SkipList *skiplist, const Item *item);
+
 /**
  * @brief Searched for an item in the skiplist.
  *
@@ -88,6 +90,8 @@ status_t skiplist_insert(SkipList *skiplist, Item *item);
  * WITHOUT OWNERSHIP.
  */
 Item *skiplist_search(const SkipList *skiplist, const Item *item);
+
+void skiplist_print(const SkipList *skiplist, const char c);
 
 /**
  * @brief prints all the levels of the skiplist and some debug info. Use it to

@@ -38,9 +38,9 @@ status_t read_description(char s[]);
 //=================|    Public Function Implementations    |==================//
 //============================================================================//
 
-Item* item_new (void) {
+Item *item_new(void) {
     Item *item = (Item *)malloc(sizeof(Item)); // allocation
-    if (NULL == item) return NULL; // err handling
+    if (NULL == item) return NULL;             // err handling
 
     // Initialization
     item->val.word[0] = '\0';
@@ -84,7 +84,7 @@ int item_cmp(const Item *item_1, const Item *item_2) {
 // TODO: finish this func
 void item_print(const Item *item) {
     item_print_word(item);
-    printf(" : ");
+    printf(" ");
     item_print_description(item);
 }
 
@@ -148,6 +148,31 @@ Item *item_read(void) {
 
     return item_from_entry(e);
 }
+
+Item *item_read_word(void) {
+    entry_t e;
+    status_t flag = read_word(e.word);
+
+    // WARNING (b): if RECOVER_FROM_BIG_INPUT is not set to a truthy value, then
+    // you must deal with the error elsewhere or it will cause reading
+    // misbehaviour.
+    // clang-format off
+    #if RECOVER_FROM_BIG_INPUT
+        if (TOO_MUCH_ERR == flag) strutils_consume_word();
+        else if (EOF_ERR == flag) return NULL;
+    #else
+        if (TOO_MUCH_ERR == flag || EOF_ERR == flag) return NULL;
+    #endif
+    // clang-format on
+
+    return item_from_entry(e);
+}
+
+int item_char_cmp (const Item* item, const char c) {
+    return item ? c - item->val.word[0] : +1;
+}
+
+
 
 //============================================================================//
 //=================|    Private Function Implementations    |=================//
@@ -250,3 +275,5 @@ status_t read_description(char s[]) {
     if ('\n' != c) return TOO_MUCH_ERR;
     return SUCCESS;
 }
+
+
