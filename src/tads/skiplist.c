@@ -58,7 +58,7 @@ static Node *node_new(const Node base);
  *
  * @param node
  */
-static void node_shallow_del(Node **node);
+static void node_shallow_del(Node *node);
 
 /**
  * @brief frees the memory used to store a node and its contetns.
@@ -69,7 +69,7 @@ static void node_shallow_del(Node **node);
  *
  * @param node
  */
-static void node_deep_del(Node **node);
+static void node_deep_del(Node *node);
 
 /**
  * @brief Creates a linked list stack node.
@@ -79,8 +79,8 @@ static void node_deep_del(Node **node);
  * @return LinkedStackNode* ptr to the new LinkedStackNode, WITH OWNERSHIP, or
  * NULL on error.
  */
-static LinkedStackNode *
-linked_stack_node_new(Node *node, LinkedStackNode *next);
+// static LinkedStackNode *
+// linked_stack_node_new(Node *node, LinkedStackNode *next);
 
 static inline Node *mainlane_search(Node *sentinel, const Item *item);
 
@@ -88,7 +88,10 @@ static inline Node *fastlane_search(Node *sentinel, const Item *item);
 
 static inline Node *express_search(Node *sentinel, const Item *item);
 
-static inline void undo_insert_at_start(SkipList *sl);
+// static inline void undo_insert_at_start(SkipList *sl);
+
+Node **skiplist_search_n_trace(SkipList *skiplist, Item *item);
+static status_t skiplist_push_front(SkipList *skiplist, Item *item);
 
 //=============================================================================/
 //=================|    Public Function Implementations     |==================/
@@ -111,7 +114,7 @@ void skiplist_del(SkipList **skiplist) {
         Node *car = titanic;
         while (NULL != car) {           // loop throw the nodes in a row
             Node *temp_car = car->next; // temp ptr
-            node_shallow_del(&car);
+            node_shallow_del(car);
             car = temp_car; // go to next
         }
         titanic = temp_titanic; // go to bellow
@@ -123,7 +126,7 @@ void skiplist_del(SkipList **skiplist) {
     //  the end is near.
     while (NULL != titanic) {               // loop throw the nodes in a row
         Node *temp_titanic = titanic->next; // temp ptr
-        node_deep_del(&titanic);
+        node_deep_del(titanic);
         titanic = temp_titanic; // go to bellow
     }
 
@@ -135,12 +138,12 @@ status_t skiplist_insert(SkipList *skiplist, Item *item) {
     // Err handling when null poiter
     // WARNING: other erros such as invalid ptr will not be caught.
     if (NULL == skiplist || NULL == item) return NUL_ERR;
-
-    LinkedStackNode *trace = NULL;
-    Node *sentinel = skiplist->top;
+#ifdef SKIPLIST_MAX_LENGTH
+    if (skiplist_is_full(skiplist)) return ARR_IS_FULL_ERR;
+#endif
 
     // Trivial case: empty list
-    if (NULL == sentinel) {
+    if (skiplist_is_empty(skiplist)) {
         skiplist->top = node_new((Node){.item = item});
         if (NULL == skiplist->top) return ALLOC_ERR;
 
@@ -150,113 +153,47 @@ status_t skiplist_insert(SkipList *skiplist, Item *item) {
         return SUCCESS;
     }
 
-    // Trivial case: item is the same to start
-    int diff = item_cmp(sentinel->item, item);
-    if (0 == diff) return REPEATED_ENTRY_ERR;
-
-    // Trivial case: insert at start
-    if (diff > 0) {
-        // NOTE (b): Sentinel is equal to top for now.
-        Node *up = node_new((Node){.item = item, .next = sentinel});
-        if (NULL == up) return ALLOC_ERR;
-        skiplist->top = up;
-        sentinel = sentinel->down;
-
-        // Loop from top to botom
-        for (; NULL != sentinel; sentinel = sentinel->down) {
-            Node *new_node = node_new((Node){.item = item, .next = sentinel});
-            // TODO: Error handling here
-            if (NULL == new_node) {
-                node_shallow_del(&new_node);
-                undo_insert_at_start(skiplist);
-                // WARNING: the caller is responsable for freeing the item
-                // memory.
-                return ALLOC_ERR;
-            }
-            up->down = new_node;
-            up = new_node;
-        }
-        skiplist->length++;
-        return SUCCESS;
-    }
-
-    // Search in fast lanes
-    for (; NULL != sentinel->down; sentinel = sentinel->down) {
-        sentinel = fastlane_search(sentinel, item);
-        trace = linked_stack_node_new(sentinel, trace);
-    }
-
-    // Search in main lane
-    Node *predecessor = sentinel;
-    while (sentinel && item_cmp(sentinel->item, item) < 0) {
-        predecessor = sentinel;
-        sentinel = sentinel->next;
-    }
-
-    // Error: repeated entry
-    if (sentinel && 0 == item_cmp(sentinel->item, item)) { // repeated
-        while (NULL != trace) {
-            LinkedStackNode *temp = trace->next;
-            free(trace);
-            trace = temp;
-        }
-
+    // Trivial case: repeated at start
+    if (0 == item_cmp(skiplist->top->item, item)) {
         return REPEATED_ENTRY_ERR;
     }
 
-    Node *new_node = node_new((Node){.item = item, .next = sentinel});
-    predecessor->next = new_node;
+    // Trivial case: Insersion at start:
+    if (item_cmp(skiplist->top->item, item) > 0) {
+        return skiplist_push_front(skiplist, item);
+    }
 
-    Node *down = new_node;
-    while ((NULL != trace) && (rand() & 1)) {
-        // clang-format off
-        new_node = node_new(
-            (Node){
-                .item = item, 
-                .next = trace->n->next, 
-                .down = down
-            }
-        );
-        // clang-format on
+    // Trace searching
+    size_t height = skiplist->height;
+    Node **trace = skiplist_search_n_trace(skiplist, item); // ownership
+    if (NULL == trace) return ALLOC_ERR;
 
-        // TODO: error handling here (new_node might be null)
-        trace->n->next = new_node;
-
-        LinkedStackNode *temp = trace->next;
-
+    // Repeated entry
+    if (0 == item_cmp(trace[height - 1]->item, item)) {
         free(trace);
+        return REPEATED_ENTRY_ERR;
+    }
 
-        trace = temp;
-        down = new_node;
+    // Inserting at every level
+    Node *new_node = NULL;
+    long long i = height - 1;
+    for (; 0 >= i; i--) {
+        new_node = node_new((Node
+        ){.item = item, .next = trace[i]->next, .down = new_node});
+        if (NULL == new_node) return PARTIAL_FAILURE;
+        trace[i]->next = new_node;
+        if (rand() & 1) break;
     }
 
     // Raise level
-    // clang-format off
-    #ifdef SKIPLIST_MAX_HEIGHT
-        _Bool raise_level =
-            ((NULL == trace) && (rand() & 1) &&
-            (skiplist_height(skiplist) < SKIPLIST_MAX_HEIGHT));
-    #else
-        _Bool raise_level = ((NULL == trace) && (rand() & 1));
-    #endif
-    // clang-format on
-
-    if (raise_level) {
-        new_node = node_new((Node){.item = item, .next = NULL, .down = down});
-        skiplist->top = node_new((Node
-        ){.item = skiplist->top->item, .next = new_node, .down = skiplist->top}
-        );
+    if ((0 < i) && (rand() & 1)) {
+        skiplist->top =
+            node_new((Node){.item = item, .next = NULL, .down = trace[0]});
         skiplist->height++;
     }
 
-    // Free remaining trace
-    while (NULL != trace) {
-        LinkedStackNode *temp = trace->next;
-        free(trace);
-        trace = temp;
-    }
-
-    skiplist->length++;
+    skiplist->length++; // inc length
+    free(trace);        // free memory
 
     return SUCCESS;
 }
@@ -313,6 +250,96 @@ Item *skiplist_search(const SkipList *skiplist, const Item *item) {
     return found_it ? sentinel->item : NULL;
 }
 
+void skiplist_strip(SkipList *skiplist) {}
+
+Item *skiplist_pop_front(SkipList *skiplist, const Item *item) {
+    if (1 == skiplist->length) {
+        // Freeing every node on the fast lanes
+        Node *sentinel = skiplist->top;
+        for (; sentinel->down; sentinel = sentinel->down) {
+            node_shallow_del(sentinel);
+        }
+
+        // Final node
+        Item *it = sentinel->item;
+        node_shallow_del(sentinel);
+
+        // Nullify everything
+        *skiplist = (SkipList){0};
+
+        return it;
+    }
+
+    // Tracing the nodes
+    size_t h = skiplist->height;
+    Item *it = NULL;
+    Node *arr[h];
+    long long i = 0;
+    Node *sentinel = skiplist->top;
+
+    for (; sentinel; sentinel = sentinel->down) {
+        arr[i++] = sentinel;
+    }
+
+    // Geting a ptr to the next item
+    i--; // Now i is the last index
+    it = arr[i]->next->item;
+    i--; // now i is the pre last index
+
+    // clang-format off
+    // This item will become the next top, so we might need to create new nodes.
+    // Ignoring the nodes above the item
+    for (; it == arr[i] && 0 <= i; i--);
+
+    // Creating new nodes
+    Node* new_node = 0 > i ? NULL : arr[i + 1];
+    for (; 0 <= i; i--) {
+        Node* temp = new_node;
+        new_node = node_new((Node){
+            .item = it, 
+            .next = arr[i]->next, 
+            .down = new_node
+        });
+
+        // Error handling: recover
+        if (NULL == new_node) {
+            Node* sentinel = temp;
+            while (sentinel->down) {
+                Node* temp = sentinel->down;
+                node_shallow_del(sentinel);
+                sentinel = temp;
+            }
+            return NULL;
+        }
+    }
+
+    // Deleting nodes
+    Node* sentinel = skiplist->top;
+    it = arr[h - 1]->item;
+    skiplist->top = new_node; // new top
+    for (i = 0; i < h; i++) {
+        node_shallow_del(arr[i]);
+    }
+
+    return it;
+}
+
+Item *skiplist_remove(SkipList *skiplist, const Item *item) {
+    // clang-format off
+    if (
+        NULL == skiplist // skiplist is not null
+        || NULL == item  // item is not null
+        || skiplist_is_empty(skiplist) // skiplist is not empty
+        || 0 < item_cmp(skiplist->top->item, item) // item is 'greater' then top
+    ) return NULL;
+    // clang-format on
+
+    // TODO: REFACTOR
+    if (0 == item_cmp(skiplist->top->item, item)) {
+        
+    }
+}
+
 // Temporary disable the "-Wunused-parameter" warning.
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
@@ -320,7 +347,6 @@ Item *skiplist_search(const SkipList *skiplist, const Item *item) {
 _Bool skiplist_is_full(const SkipList *skiplist) {
     // clang-format off
     #ifdef SKIPLIST_MAX_LENGTH
-        #define aaaa
         return skiplist ? SKIPLIST_MAX_LENGTH <= skiplist->length : 0;
     #else
         return 0;
@@ -353,24 +379,23 @@ static Node *node_new(const Node base) {
     return n;                               // return ptr, might be null
 }
 
-static void node_shallow_del(Node **node) {
-    if (NULL == node) return;
-    free(*node);
-    *node = NULL;
+static void node_shallow_del(Node *node) { free(node); }
+
+static void node_deep_del(Node *node) {
+    if (node) item_del(&node->item);
+    free(node);
 }
 
-static void node_deep_del(Node **node) {
-    if (NULL == node) return;
-    item_del(&(*node)->item);
-    free(*node);
-    *node = NULL;
-}
+// static LinkedStackNode *
+// linked_stack_node_new(Node *node, LinkedStackNode *next) {
+//     LinkedStackNode *lsn = (LinkedStackNode
+//     *)malloc(sizeof(LinkedStackNode)); if (lsn) *lsn = (LinkedStackNode){.n =
+//     node, .next = next}; return lsn;
+// }
 
-static LinkedStackNode *
-linked_stack_node_new(Node *node, LinkedStackNode *next) {
-    LinkedStackNode *lsn = (LinkedStackNode *)malloc(sizeof(LinkedStackNode));
-    if (lsn) *lsn = (LinkedStackNode){.n = node, .next = next};
-    return lsn;
+bool skiplist_includes(SkipList* skiplist, Item* item) {
+    if (NULL == skiplist || NULL == item) return false;
+    // TODO: refactor
 }
 
 Node *skiplist_node_search(const SkipList *skiplist, const Item *item) {
@@ -418,14 +443,46 @@ static inline Node *express_search(Node *sentinel, const Item *item) {
     return sentinel;
 }
 
-static inline void undo_insert_at_start(SkipList *sl) {
-    Node *sentinel = sl->top;
-    sl->top = sl->top->next;
+Node **skiplist_search_n_trace(SkipList *skiplist, Item *item) {
+    // if (NULL == skiplist || NULL == item || NULL == skiplist->top) return
+    // NULL;
 
-    // Freeing all allocated memory
-    while (sentinel) {
-        Node *temp_sentinel = sentinel->down;
-        node_shallow_del(&sentinel);
-        sentinel = temp_sentinel;
+    size_t n = skiplist->height;
+    Node **trace = (Node **)malloc(n * sizeof(Node **));
+    if (NULL == trace) return NULL;
+
+    // Fast lane search
+    Node *sentinel = skiplist->top;
+    for (size_t i = 0; sentinel; i++, sentinel = sentinel->down) {
+        sentinel = fastlane_search(sentinel, item);
+        trace[i] = sentinel;
     }
+
+    return trace;
+}
+
+static status_t skiplist_push_front(SkipList *skiplist, Item *item) {
+    // New top
+    Node *new_node = node_new((Node){.item = item, .next = skiplist->top});
+    if (NULL == new_node) return NUL_ERR; // Error handling
+    Node *sentinel = skiplist->top->down;
+    skiplist->top = new_node;
+
+    // Creating the new nodes for each level
+    for (; sentinel; sentinel = sentinel->down) {
+        new_node->down = node_new((Node){.item = item, .next = skiplist->top});
+
+        // Error recorvery
+        if (NULL == new_node->down) {
+            Node *sentinel = skiplist->top;
+            skiplist->top = skiplist->top->next;
+            while (sentinel) {
+                Node *temp = sentinel->down;
+                node_shallow_del(sentinel);
+                sentinel = temp;
+            }
+        }
+    }
+
+    return SUCCESS;
 }

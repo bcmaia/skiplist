@@ -30,6 +30,10 @@ typedef enum {
     UNRECOVERABLE,
     REPEATED_ENTRY_ERR,
     TOO_MUCH_ERR,
+    ARR_IS_FULL_ERR,
+    PARTIAL_FAILURE,
+    NOT_FOUND_ERR,
+    CRITICAL_ERR,
 } status_t;
 
 #endif
