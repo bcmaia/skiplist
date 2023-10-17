@@ -79,7 +79,7 @@ void skiplist_del(SkipList **skiplist);
  */
 status_t skiplist_insert(SkipList *skiplist, Item *item);
 
-Item *skiplist_remove(SkipList *skiplist, const Item *item);
+Item *skiplist_remove(SkipList *skiplist, Item *item);
 
 /**
  * @brief Searched for an item in the skiplist.

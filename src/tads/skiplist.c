@@ -90,10 +90,13 @@ static inline Node *express_search(Node *sentinel, const Item *item);
 
 // static inline void undo_insert_at_start(SkipList *sl);
 
+static status_t skiplist_push_front(SkipList *skiplist, Item *item);
+
 Node **skiplist_search_n_trace(SkipList *skiplist, Item *item);
 // static status_t skiplist_push_front(SkipList *skiplist, Item *item);
 _Bool skiplist_includes(const SkipList *skiplist, const Item *item);
 Node *skiplist_node_search(const SkipList *skiplist, const Item *item);
+Node **skiplist_trace(SkipList *skiplist, Item *item);
 
 //=============================================================================/
 //=================|    Public Function Implementations     |==================/
@@ -138,57 +141,62 @@ void skiplist_del(SkipList **skiplist) {
 
 status_t skiplist_insert(SkipList *skiplist, Item *item) {
     if (skiplist_includes(skiplist, item)) return REPEATED_ENTRY_ERR;
+    if (skiplist_is_full(skiplist)) return ARR_IS_FULL_ERR;
 
     if (skiplist_is_empty(skiplist)) {
         skiplist->top = node_new((Node){.item = item});
-        skiplist->top = node_new((Node){.item = item, .down = skiplist->top});
+        // skiplist->top = node_new((Node){.item = item, .down = skiplist->top});
 
         skiplist->length = 1;
-        skiplist->height = 2;
+        skiplist->height = 1;
 
         return SUCCESS;
     }
 
-    Node *sentinel = skiplist->top;
+    // Trivial case, insertion at the begginig
+    if (item_cmp(skiplist->top->item, item) >= 0)
+        return skiplist_push_front(skiplist, item);
 
-    size_t h = skiplist->height;
-    Node **updates = (Node **)malloc(h * sizeof(Node *));
-
-    size_t depth = 0;
-    while (sentinel->down != NULL) {
-        while (sentinel->next && item_cmp(sentinel->next->item, item) < 0) {
-            sentinel = sentinel->next;
-        }
-        updates[depth++] = sentinel;
-        sentinel = sentinel->down;
-    }
-
-    while (sentinel->next && item_cmp(sentinel->next->item, item) < 0) {
-        sentinel = sentinel->next;
-    }
-    updates[depth++] = sentinel;
+    Node **updates = skiplist_trace(skiplist, item);
 
     // Inserção
-    size_t curr_lv = 0;
+    size_t h = skiplist->height;
+    size_t lv = h - 1;
     Node *new_node;
-    while (curr_lv < skiplist->height) {
-        new_node = node_new((Node){.item = item});
-        if (0 == curr_lv) {
-            new_node->next = updates[curr_lv]->next;
-            new_node->down = NULL; // NOTE: unessessary // TODO: remove
-        } else {
-            new_node->next = updates[curr_lv]->next;
-            new_node->down = updates[curr_lv - 1]->next;
-        }
-        updates[curr_lv]->next = new_node;
-        curr_lv++;
+
+    new_node = node_new((Node){
+        .item = item,
+        .next = updates[lv]->next,
+    });
+    if (NULL == new_node) { free(updates); return ALLOC_ERR;}
+
+    // Todo: improve this
+    for (; lv < h && rand() & 1; lv--) {
+        // TODO: Add error handling here
+        new_node = node_new((Node){
+            .item = item,
+            .next = updates[lv]->next,
+            .down = new_node,
+        });
+        if (new_node) updates[lv]->next = new_node;
+        else break; // err handling
     }
 
-    while (rand() & 1) {
-        new_node = node_new((Node){.item = item, .down = new_node});
-        skiplist->top = node_new((Node
-        ){.item = item, .next = new_node, .down = skiplist->top});
-        skiplist->height++;
+    // Raise level
+    if (new_node && lv >= h && rand() & 1) {
+        // TODO: Add error handling here
+        new_node = node_new((Node){
+            .item = item,
+            .down = new_node,
+        });
+
+        if (new_node) {
+            skiplist->top = node_new((Node){
+                .item = skiplist->top->item,
+                .next = new_node,
+                .down = skiplist->top,
+            });
+        }
     }
 
     skiplist->length++;
@@ -248,29 +256,14 @@ Item *skiplist_search(const SkipList *skiplist, const Item *item) {
     return found_it ? sentinel->item : NULL;
 }
 
-Item *skiplist_remove(SkipList *skiplist, const Item *item) {
+Item *skiplist_remove(SkipList *skiplist, Item *item) {
     if (!skiplist_includes(skiplist, item)) return NULL;
 
     Node *sentinel = skiplist->top;
     if (NULL == sentinel) return NULL;
 
-    size_t h = skiplist->height;
-    Node *updates[h];
-
-    size_t depth = 0;
-    while (sentinel && sentinel->down != NULL) {
-        while (sentinel && item_cmp(sentinel->next->item, item) < 0) {
-            sentinel = sentinel->next;
-        }
-        updates[depth++] = sentinel;
-        sentinel = sentinel->down;
-    }
-
-    while (sentinel && item_cmp(sentinel->next->item, item) < 0) {
-        sentinel = sentinel->next;
-    }
-    updates[depth++] = sentinel;
-    Item *result = sentinel->item;
+    Node **updates = skiplist_trace(skiplist, item);
+    Item *result = updates[skiplist->height - 1]->item;
 
     size_t curr_lv = 0;
     while (curr_lv < skiplist->height) {
@@ -282,7 +275,6 @@ Item *skiplist_remove(SkipList *skiplist, const Item *item) {
         curr_lv++;
     }
 
-    // NOTE: this might give an error if the list is to short
     while (skiplist->top->next == NULL) {
         Node *rem = skiplist->top;
         skiplist->top = skiplist->top->down;
@@ -304,7 +296,8 @@ void skiplist_print(const SkipList *skiplist, const char c) {
     }
 
     Node *sentinel = skiplist->top;
-    while (sentinel && sentinel->down && item_char_cmp(sentinel->item, c) <= 0) {
+    while (sentinel && sentinel->down && item_char_cmp(sentinel->item, c) <= 0
+    ) {
         while (sentinel && item_char_cmp(sentinel->item, c) < 0) {
             sentinel = sentinel->next;
         }
@@ -436,10 +429,10 @@ Node **skiplist_search_n_trace(SkipList *skiplist, Item *item) {
 }
 
 // Make shure the list is not empty or invalid
-Node **skiplist_trace (SkipList *skiplist, Item *item) {
-    Node **updates = (Node **)malloc(skiplist->height * sizeof(Node*));
+Node **skiplist_trace(SkipList *skiplist, Item *item) {
+    Node **updates = (Node **)malloc(skiplist->height * sizeof(Node *));
     size_t depth = 0;
-    Node* sentinel = skiplist->top;
+    Node *sentinel = skiplist->top;
 
     while (sentinel->down != NULL) {
         while (sentinel->next && item_cmp(sentinel->next->item, item) < 0) {
@@ -458,29 +451,28 @@ Node **skiplist_trace (SkipList *skiplist, Item *item) {
     return updates;
 }
 
-// static status_t skiplist_push_front(SkipList *skiplist, Item *item) {
-//     // New top
-//     Node *new_node = node_new((Node){.item = item, .next = skiplist->top});
-//     if (NULL == new_node) return NUL_ERR; // Error handling
-//     Node *sentinel = skiplist->top->down;
-//     skiplist->top = new_node;
+static status_t skiplist_push_front(SkipList *skiplist, Item *item) {
+    // New top
+    Node *new_node = node_new((Node){.item = item, .next = skiplist->top});
+    if (NULL == new_node) return NUL_ERR; // Error handling
+    Node *sentinel = skiplist->top->down;
+    skiplist->top = new_node;
 
-//     // Creating the new nodes for each level
-//     for (; sentinel; sentinel = sentinel->down) {
-//         new_node->down = node_new((Node){.item = item, .next =
-//         skiplist->top});
+    // Creating the new nodes for each level
+    for (; sentinel; sentinel = sentinel->down) {
+        new_node->down = node_new((Node){.item = item, .next = skiplist->top});
 
-//         // Error recorvery
-//         if (NULL == new_node->down) {
-//             Node *sentinel = skiplist->top;
-//             skiplist->top = skiplist->top->next;
-//             while (sentinel) {
-//                 Node *temp = sentinel->down;
-//                 node_shallow_del(sentinel);
-//                 sentinel = temp;
-//             }
-//         }
-//     }
+        // Error recorvery
+        if (NULL == new_node->down) {
+            Node *sentinel = skiplist->top;
+            skiplist->top = skiplist->top->next;
+            while (sentinel) {
+                Node *temp = sentinel->down;
+                node_shallow_del(sentinel);
+                sentinel = temp;
+            }
+        }
+    }
 
-//     return SUCCESS;
-// }
+    return SUCCESS;
+}

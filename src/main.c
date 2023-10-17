@@ -14,7 +14,7 @@ int main() {
     SkipList *skiplist = skiplist_new();
     status_t flag;
 
-    while (EOF == scanf(" %62s", cmd)) {
+    while (EOF != scanf(" %62s", cmd)) {
         if (0 == strcmp(cmd, "insercao")) {
             Item *item = item_read();
             if (SUCCESS != skiplist_insert(skiplist, item)) {
@@ -23,6 +23,7 @@ int main() {
             }
         } else if (0 == strcmp(cmd, "alteracao")) {
             Item *item = item_read(); // mem leak // é isso mesmo vadia, essa linha vaza memória
+            item_del(&item);
         } else if (0 == strcmp(cmd, "remocao")) {
             Item *item = item_read_word();
             Item *removed = skiplist_remove(skiplist, item);
@@ -30,6 +31,7 @@ int main() {
             item_del(&removed);
         } else if (0 == strcmp(cmd, "busca")) {
             Item *item = item_read_word(); // mem leak // é isso mesmo vadia, essa linha vaza memória
+            item_del(&item);
         } else if (0 == strcmp(cmd, "impressao")) {
             char c = 0;
             scanf(" %c", &c);
