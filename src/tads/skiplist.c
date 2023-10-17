@@ -168,8 +168,12 @@ status_t skiplist_insert(SkipList *skiplist, Item *item) {
         .item = item,
         .next = updates[lv]->next,
     });
-    if (NULL == new_node) { free(updates); return ALLOC_ERR;}
 
+    if(new_node)
+        updates[lv]->next = new_node;
+    else { free(updates); return ALLOC_ERR;}
+
+    lv--;
     // Todo: improve this
     for (; lv < h && rand() & 1; lv--) {
         // TODO: Add error handling here
@@ -430,11 +434,11 @@ Node **skiplist_search_n_trace(SkipList *skiplist, Item *item) {
 
 // Make shure the list is not empty or invalid
 Node **skiplist_trace(SkipList *skiplist, Item *item) {
-    Node **updates = (Node **)malloc(skiplist->height * sizeof(Node *));
+    Node **updates = (Node **)malloc((skiplist->height + 1) * sizeof(Node *));
     size_t depth = 0;
     Node *sentinel = skiplist->top;
 
-    while (sentinel->down != NULL) {
+    while (sentinel && sentinel->down != NULL) {
         while (sentinel->next && item_cmp(sentinel->next->item, item) < 0) {
             sentinel = sentinel->next;
         }
@@ -442,7 +446,7 @@ Node **skiplist_trace(SkipList *skiplist, Item *item) {
         sentinel = sentinel->down;
     }
 
-    while (sentinel->next && item_cmp(sentinel->next->item, item) < 0) {
+    while (sentinel && sentinel->next && item_cmp(sentinel->next->item, item) < 0) {
         sentinel = sentinel->next;
     }
 
