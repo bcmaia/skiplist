@@ -14,11 +14,7 @@ int main() {
     SkipList *skiplist = skiplist_new();
     status_t flag;
 
-    while (1) {
-        strutils_consume_spaces();
-        _Bool eof_reached = strutils_read_word(cmd, 63);
-        if (eof_reached) break;
-
+    while (EOF == scanf(" %62s", cmd)) {
         if (0 == strcmp(cmd, "insercao")) {
             Item *item = item_read();
             if (SUCCESS != skiplist_insert(skiplist, item)) {
