@@ -19,18 +19,20 @@ void strutils_consume_word(void) {
     char c;
     while (EOF != (c = getchar()) && !strutils_isspace(c))
         ;
-    if (EOF != c && '\n' != c) ungetc(c, stdin);
+    if (EOF != c) ungetc(c, stdin);
 }
 
 /**
  * @brief This function will read characters from stdin until the first white
  * space is encountered. All the characters read will be discarded.
  */
-void strutils_consume_spaces(void) {
+int strutils_consume_spaces(void) {
     char c;
     while (EOF != (c = getchar()) && strutils_isspace(c))
         ;
-    if (EOF != c && !strutils_isspace(c)) ungetc(c, stdin);
+    if (EOF == c) return -1;
+    if (!strutils_isspace(c)) ungetc(c, stdin);
+    return 0;
 }
 
 _Bool strutils_isspace(const char c) {

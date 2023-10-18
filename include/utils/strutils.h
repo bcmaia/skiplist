@@ -6,7 +6,7 @@
 
 void strutils_consume_line(void); 
 void strutils_consume_word(void);
-void strutils_consume_spaces(void);
+int strutils_consume_spaces(void);
 
 _Bool strutils_read_word(char s[], const size_t max_size);
 

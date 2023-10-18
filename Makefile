@@ -387,3 +387,9 @@ bundle:
 	@zip -r $(BUNDLE_DIR)/$(BUNDLE_NAME) ./ -x "target/*" ".git/*" ".vscode"
 	@echo "Bundle created: $(BUNDLE_NAME)"
 	@$(RM) bundle-force-release.txt
+
+
+out: build
+	@$(ECHO) "[$(MODE):out]\t Generating the output.txt..."
+	@cat "input.txt" | $(EXECUTABLE) > output.txt
+	@$(ECHO) "[$(MODE):out]\t All done :)"

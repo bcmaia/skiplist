@@ -143,33 +143,38 @@ void item_print_description(const Item *item) {
  *
  */
 Item *item_read(void) {
-    entry_t e;
-    status_t flag = read_word(e.word);
-
-    // WARNING (b): if RECOVER_FROM_BIG_INPUT is not set to a truthy value, then
-    // you must deal with the error elsewhere or it will cause reading
-    // misbehaviour.
-#if RECOVER_FROM_BIG_INPUT
-    if (TOO_MUCH_ERR == flag) strutils_consume_word();
-    else if (EOF_ERR == flag) return NULL;
-#else
-    if (TOO_MUCH_ERR == flag || EOF_ERR == flag) return NULL;
-#endif
-
-    flag = read_description(e.description);
-
-#if RECOVER_FROM_BIG_INPUT
-    if (TOO_MUCH_ERR == flag) strutils_consume_line();
-    else if (EOF_ERR == flag) return NULL;
-#else
-    if (TOO_MUCH_ERR == flag || EOF_ERR == flag) return NULL;
-#endif
-
+    entry_t e = (entry_t){0};
+    scanf("%50s %140[^\n]", e.word, e.description);
     return item_from_entry(e);
+
+    // TODO: fix latter
+
+//     status_t flag = read_word(e.word);
+
+//     // WARNING (b): if RECOVER_FROM_BIG_INPUT is not set to a truthy value, then
+//     // you must deal with the error elsewhere or it will cause reading
+//     // misbehaviour.
+// #if RECOVER_FROM_BIG_INPUT
+//     if (TOO_MUCH_ERR == flag) strutils_consume_word();
+//     else if (EOF_ERR == flag) return NULL;
+// #else
+//     if (TOO_MUCH_ERR == flag || EOF_ERR == flag) return NULL;
+// #endif
+
+//     flag = read_description(e.description);
+
+// #if RECOVER_FROM_BIG_INPUT
+//     if (TOO_MUCH_ERR == flag) strutils_consume_line();
+//     else if (EOF_ERR == flag) return NULL;
+// #else
+//     if (TOO_MUCH_ERR == flag || EOF_ERR == flag) return NULL;
+// #endif
+
+//     return item_from_entry(e);
 }
 
 Item *item_read_word(void) {
-    entry_t e;
+    entry_t e = (entry_t){0};
     status_t flag = read_word(e.word);
 
     // WARNING (b): if RECOVER_FROM_BIG_INPUT is not set to a truthy value, then
@@ -205,6 +210,7 @@ int item_raw_char_cmp(const Item *item, const char c) {
  */
 Item *item_from_entry(const entry_t entry) {
     Item *item = (Item *)malloc(sizeof(Item));
+    if (NULL == item) printf ("COULD NOT ALLOC ITEM!\n");
     if (item) item->val = entry;
     return item;
 }
@@ -236,7 +242,11 @@ Item *item_from_strings(const char w[], const char d[]) {
  */
 status_t read_word(char s[]) {
     // Ignoring leading white spaces
-    strutils_consume_spaces();
+    int _flag = strutils_consume_spaces();
+    if (EOF == _flag) {
+        s[0] = '\0';
+        return EOF_ERR;
+    }
 
     // Reading
     int i;
@@ -251,7 +261,7 @@ status_t read_word(char s[]) {
     s[i] = '\0';
 
     // Outputing the status
-    if (EOF == c) return EOF_ERR;
+    // if (EOF == c) return EOF_ERR;
     if (!strutils_isspace(c)) return TOO_MUCH_ERR;
     return SUCCESS;
 }

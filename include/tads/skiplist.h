@@ -27,7 +27,7 @@
 //=================|    Constants   |==========================================/
 //=============================================================================/
 
-#define SKIPLIST_PROB (0.6289)
+#define SKIPLIST_PROB (0.5)
 #define RAISE_ONLY_ONCE (0)
 
 // NOTE (b): you can choose to define SKIPLIST_MAX_HEIGHT and/or
@@ -141,5 +141,6 @@ size_t skiplist_height(const SkipList *skiplist);
 
 
 status_t skiplist_update(SkipList *skiplist, Item *item);
+_Bool skiplist_debug_validate(const SkipList *skiplist) ;
 
 #endif // SKIPLIST_H_DEFINED
