@@ -144,10 +144,15 @@ void item_print_description(const Item *item) {
  */
 Item *item_read(void) {
     entry_t e = (entry_t){0};
-    scanf("%50s %140[^\n]", e.word, e.description);
-    return item_from_entry(e);
 
-    // TODO: fix latter
+    // TODO: proper error analysis and err handling 
+    if (EOF == scanf("%50s %140[^\n]", e.word, e.description)) {
+        return item_from_entry(e);
+    } else {
+        return item_from_entry(e);
+    }
+
+    // TODO: fix later
 
 //     status_t flag = read_word(e.word);
 
