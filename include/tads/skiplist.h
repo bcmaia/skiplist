@@ -19,12 +19,16 @@
 
 #include "tads/item.h"
 #include "tads/types.h"
+#include "utils/mathutils.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 //=============================================================================/
 //=================|    Constants   |==========================================/
 //=============================================================================/
+
+#define SKIPLIST_PROB (0.6289)
+#define RAISE_ONLY_ONCE (0)
 
 // NOTE (b): you can choose to define SKIPLIST_MAX_HEIGHT and/or
 // SKIPLIST_MAX_LENGTH or not.
@@ -91,7 +95,7 @@ Item *skiplist_remove(SkipList *skiplist, Item *item);
  */
 Item *skiplist_search(const SkipList *skiplist, const Item *item);
 
-void skiplist_print(const SkipList *skiplist, const char c);
+status_t skiplist_print(const SkipList *skiplist, const char c);
 
 /**
  * @brief prints all the levels of the skiplist and some debug info. Use it to
@@ -134,5 +138,8 @@ size_t skiplist_length(const SkipList *skiplist);
  * @return size_t the height of the skiplist.
  */
 size_t skiplist_height(const SkipList *skiplist);
+
+
+status_t skiplist_update(SkipList *skiplist, Item *item);
 
 #endif // SKIPLIST_H_DEFINED

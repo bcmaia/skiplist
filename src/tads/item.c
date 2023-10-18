@@ -56,19 +56,38 @@ Item *item_new(void) {
  */
 void item_del(Item **item) {
     if (NULL == item) return; // err handling
-        // NOTE: free(NULL) is fine, so no need to check *item.
+    // NOTE: free(NULL) is fine, so no need to check *item.
 
-        // Debug printing if needed.
-#if DEBUG
-    printf("DELETING [%s] \n", (*item)->val.word);
-#endif
+    // Debug printing if needed.
+    // #if DEBUG
+    //     printf("DELETING [%s] \n", (*item)->val.word);
+    // #endif
 
     free(*item);
     *item = NULL; // opionated ptr erasiong: this avoids dangling ptrs.
 }
 
 /**
- * @brief Compares two itens. It is almost just a wrapper around strcmp.
+ * @brief Compares two itens.
+ *
+ * It is almost just a wrapper around strcmp. Keep in mind it does not check if
+ * the pointers are null.
+ *
+ * @param item_1 ptr to an item.
+ * @param item_2 ptr to an item.
+ * @return int y. y = 0 for equal items. y < 0 when item_2 is ordered
+ * alfabatically after item_1 and y > 0 otherwise.
+ *
+ */
+int item_raw_cmp(const Item *item_1, const Item *item_2) {
+    return strcmp(item_1->val.word, item_2->val.word);
+}
+
+/**
+ * @brief Compares two itens.
+ *
+ * It is almost just a wrapper around strcmp; but it checks if the pointers are
+ * null.
  *
  * @param item_1 ptr to an item.
  * @param item_2 ptr to an item.
@@ -78,7 +97,7 @@ void item_del(Item **item) {
  */
 int item_cmp(const Item *item_1, const Item *item_2) {
     if (NULL == item_1 || NULL == item_2) return 0;
-    return strcmp(item_1->val.word, item_2->val.word);
+    return item_raw_cmp(item_1, item_2);
 }
 
 // TODO: finish this func
@@ -168,11 +187,9 @@ Item *item_read_word(void) {
     return item_from_entry(e);
 }
 
-int item_char_cmp (const Item* item, const char c) {
-    return item ? c - item->val.word[0] : +1;
+int item_raw_char_cmp(const Item *item, const char c) {
+    return item->val.word[0] - c;
 }
-
-
 
 //============================================================================//
 //=================|    Private Function Implementations    |=================//
@@ -276,4 +293,6 @@ status_t read_description(char s[]) {
     return SUCCESS;
 }
 
-
+void item_raw_update(Item *destiny, const Item *reference) {
+    destiny->val = reference->val;
+}

@@ -23,12 +23,14 @@ typedef struct _item_s Item;
 
 Item *item_new(void);
 void item_del(Item **item);
+int item_raw_cmp(const Item *item_1, const Item *item_2);
 int item_cmp(const Item *item_1, const Item *item_2);
 void item_print(const Item *item);
 void item_print_word(const Item *item);
 void item_print_description(const Item *item);
 Item *item_read(void);
 Item *item_read_word(void);
-int item_char_cmp (const Item* item, const char c);
+int item_raw_char_cmp (const Item* item, const char c);
+void item_raw_update (Item* destiny, const Item* reference);
 
 #endif // ITEM_H_DEFINED

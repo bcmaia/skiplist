@@ -10,6 +10,18 @@
         "string.h": "c",
         "strutils.h": "c",
         "algorithm": "c",
-        "queue": "c"
+        "queue": "c",
+        "mathutils.h": "c",
+        "array": "c",
+        "deque": "c",
+        "string": "c",
+        "unordered_map": "c",
+        "vector": "c",
+        "string_view": "c",
+        "initializer_list": "c",
+        "__bit_reference": "c",
+        "__hash_table": "c",
+        "__split_buffer": "c",
+        "ios": "c"
     }
 }
