@@ -22,6 +22,7 @@
         "__bit_reference": "c",
         "__hash_table": "c",
         "__split_buffer": "c",
-        "ios": "c"
+        "ios": "c",
+        "skiplist.h": "c"
     }
 }

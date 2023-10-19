@@ -138,7 +138,7 @@ status_t skiplist_insert(SkipList *skiplist, Item *item) {
 
     // PART 4: Insertion at the existing fast lanes
     long long lv = h - 2;
-    for (; (lv >= 0) && (rand() & 1); lv--) {
+    for (; (lv >= 0) && (rnd_normalized() <= SKIPLIST_PROB); lv--) {
         // TODO: Add error handling here
         new_node = node_new((Node){
             .item = item,
@@ -154,12 +154,12 @@ status_t skiplist_insert(SkipList *skiplist, Item *item) {
     // Raising the level of the node above the current level of the skiplist
     if (lv < 0 && new_node) {
         lv = h;
-        for (; (rand() & 1);) {
-// clang-formater off
-#ifdef SKIPLIST_MAX_HEIGHT
-            if (lv++ >= SKIPLIST_MAX_HEIGHT) break;
-#endif
-            // clang-formater on
+        for (; (rnd_normalized() <= SKIPLIST_PROB);) {
+            // clang-format off
+            #ifdef SKIPLIST_MAX_HEIGHT
+                if (lv++ >= SKIPLIST_MAX_HEIGHT) break;
+            #endif
+            // clang-format on
 
             // New node
             new_node = node_new((Node){
@@ -452,12 +452,11 @@ static void node_shallow_del(Node *node) { free(node); }
 
 /**
  * @brief frees the memory used to store a node and its contetns.
- * @warning if item is used elsewhere after a node containing a reference
- *  to it if deleted using this function, a segfault by dangling ptr access may
- *  ocur.
- *  leak.
  *
- * @param node
+ * @warning if item is used elsewhere after a node containing a reference to it
+ * if deleted using this function, a segfault by dangling ptr access may occur.
+ *
+ * @param node the node that will be destroyed.
  */
 static void node_deep_del(Node *node) {
     if (node) item_del(&node->item);
@@ -466,7 +465,7 @@ static void node_deep_del(Node *node) {
 
 /**
  * @brief Checks if the skiplist contains a item.
- * 
+ *
  * @param skiplist a pointer to the skiplist.
  * @param item a pointer to the item.
  * @return _Bool \c 1 if the skiplist contains the item, \c 0 otherwise.
@@ -478,12 +477,12 @@ _Bool skiplist_includes(const SkipList *skiplist, const Item *item) {
 
 /**
  * @brief Searches the main lane of the skiplist for a item.
- * 
+ *
  * @param sentinel a pointer to the first node of the main lane.
  * @param item a pointer to the item.
  * @return Node* a pointer to the node that preceeds the node that contains the
  * item, or NULL if the item is not in the skiplist.
-*/
+ */
 static inline Node *mainlane_search(Node *sentinel, const Item *item) {
     while (sentinel && item_cmp(sentinel->item, item) < 0) {
         sentinel = sentinel->next;
@@ -493,12 +492,12 @@ static inline Node *mainlane_search(Node *sentinel, const Item *item) {
 
 /**
  * @brief Searches the fast lane of the skiplist for a item.
- * 
+ *
  * @param sentinel a pointer to the first node of the fast lane.
  * @param item a pointer to the item.
  * @return Node* a pointer to the node that preceeds the node that contains the
  * item, or NULL if the item is not in the skiplist.
-*/
+ */
 static inline Node *fastlane_search(Node *sentinel, const Item *item) {
     // WARNING: We assume `NULL != sentinel` and `NULL != item`
     if (NULL == sentinel) return NULL;
@@ -510,11 +509,11 @@ static inline Node *fastlane_search(Node *sentinel, const Item *item) {
 
 /**
  * @brief Searches the skiplist for a item, except for the main lane.
- * 
+ *
  * @param sentinel a pointer to the first node of the skiplist.
  * @param item a pointer to the item.
  * @return Node* a pointer to the node that preceeds the node that contains the
-*/
+ */
 static inline Node *express_search(Node *sentinel, const Item *item) {
     // WARNING: We assume `NULL != sentinel` and `NULL != item`
     if (NULL == sentinel) return NULL;
@@ -535,8 +534,9 @@ static inline Node *express_search(Node *sentinel, const Item *item) {
  * also assumes that the list is not empty.
  *
  * @param skiplist a ptr to the skiplist.
- * @param item
- * @return Node**
+ * @param item ptr to an item containing the target key.
+ * @return Node** vector of pointers to Nodes that were found dyring the trace
+ * search. You have ownership.
  */
 Node **skiplist_raw_trace(SkipList *skiplist, Item *item) {
     if (NULL == skiplist || item == NULL || skiplist->top == NULL) return NULL;
