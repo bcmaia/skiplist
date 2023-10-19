@@ -1,0 +1,131 @@
+==22016== Memcheck, a memory error detector
+==22016== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==22016== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==22016== Command: target/debug/bin/myapp
+==22016== 
+==22016== Invalid write of size 8
+==22016==    at 0x10AAF6: skiplist_trace (skiplist.c:453)
+==22016==    by 0x109FC7: skiplist_insert (skiplist.c:160)
+==22016==    by 0x109347: main (main.c:21)
+==22016==  Address 0x4aa19f8 is 0 bytes after a block of size 8 alloc'd
+==22016==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22016==    by 0x10AA12: skiplist_trace (skiplist.c:437)
+==22016==    by 0x109FC7: skiplist_insert (skiplist.c:160)
+==22016==    by 0x109347: main (main.c:21)
+==22016== 
+==22016== Invalid read of size 8
+==22016==    at 0x10AA95: skiplist_trace (skiplist.c:441)
+==22016==    by 0x109FC7: skiplist_insert (skiplist.c:160)
+==22016==    by 0x109347: main (main.c:21)
+==22016==  Address 0x10 is not stack'd, malloc'd or (recently) free'd
+==22016== 
+==22016== 
+==22016== Process terminating with default action of signal 11 (SIGSEGV)
+==22016==  Access not within mapped region at address 0x10
+==22016==    at 0x10AA95: skiplist_trace (skiplist.c:441)
+==22016==    by 0x109FC7: skiplist_insert (skiplist.c:160)
+==22016==    by 0x109347: main (main.c:21)
+==22016==  If you believe this happened as a result of a stack
+==22016==  overflow in your program's main thread (unlikely but
+==22016==  possible), you can try to increase the size of the
+==22016==  main thread stack using the --main-stacksize= flag.
+==22016==  The main thread stack size used in this run was 8388608.
+==22016== 
+==22016== HEAP SUMMARY:
+==22016==     in use at exit: 6,040 bytes in 13 blocks
+==22016==   total heap usage: 15 allocs, 2 frees, 6,056 bytes allocated
+==22016== 
+==22016== 8 bytes in 1 blocks are still reachable in loss record 1 of 9
+==22016==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22016==    by 0x10AA12: skiplist_trace (skiplist.c:437)
+==22016==    by 0x109FC7: skiplist_insert (skiplist.c:160)
+==22016==    by 0x109347: main (main.c:21)
+==22016== 
+==22016== 24 bytes in 1 blocks are still reachable in loss record 2 of 9
+==22016==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22016==    by 0x109D86: skiplist_new (skiplist.c:106)
+==22016==    by 0x109308: main (main.c:14)
+==22016== 
+==22016== 24 bytes in 1 blocks are still reachable in loss record 3 of 9
+==22016==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22016==    by 0x10A6CC: node_new (skiplist.c:352)
+==22016==    by 0x109F37: skiplist_insert (skiplist.c:147)
+==22016==    by 0x109347: main (main.c:21)
+==22016== 
+==22016== 24 bytes in 1 blocks are still reachable in loss record 4 of 9
+==22016==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22016==    by 0x10A6CC: node_new (skiplist.c:352)
+==22016==    by 0x10A17E: skiplist_insert (skiplist.c:192)
+==22016==    by 0x109347: main (main.c:21)
+==22016== 
+==22016== 24 bytes in 1 blocks are still reachable in loss record 5 of 9
+==22016==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22016==    by 0x10A6CC: node_new (skiplist.c:352)
+==22016==    by 0x10A1C6: skiplist_insert (skiplist.c:198)
+==22016==    by 0x109347: main (main.c:21)
+==22016== 
+==22016== 48 bytes in 2 blocks are still reachable in loss record 6 of 9
+==22016==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22016==    by 0x10A6CC: node_new (skiplist.c:352)
+==22016==    by 0x10A039: skiplist_insert (skiplist.c:167)
+==22016==    by 0x109347: main (main.c:21)
+==22016== 
+==22016== 768 bytes in 4 blocks are still reachable in loss record 7 of 9
+==22016==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22016==    by 0x109A98: item_from_entry (item.c:190)
+==22016==    by 0x109956: item_read (item.c:149)
+==22016==    by 0x109330: main (main.c:20)
+==22016== 
+==22016== 1,024 bytes in 1 blocks are still reachable in loss record 8 of 9
+==22016==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22016==    by 0x48F3BA3: _IO_file_doallocate (filedoalloc.c:101)
+==22016==    by 0x4902CDF: _IO_doallocbuf (genops.c:347)
+==22016==    by 0x4901CDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==22016==    by 0x4902D95: _IO_default_uflow (genops.c:362)
+==22016==    by 0x48D80CF: __vfscanf_internal (vfscanf-internal.c:628)
+==22016==    by 0x48D7141: __isoc99_scanf (isoc99_scanf.c:30)
+==22016==    by 0x1094E3: main (main.c:17)
+==22016== 
+==22016== 4,096 bytes in 1 blocks are still reachable in loss record 9 of 9
+==22016==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22016==    by 0x48F3BA3: _IO_file_doallocate (filedoalloc.c:101)
+==22016==    by 0x4902CDF: _IO_doallocbuf (genops.c:347)
+==22016==    by 0x4901F5F: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:744)
+==22016==    by 0x49006D4: _IO_new_file_xsputn (fileops.c:1243)
+==22016==    by 0x49006D4: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1196)
+==22016==    by 0x48EA14C: outstring_func (vfprintf-internal.c:239)
+==22016==    by 0x48EA14C: __vfprintf_internal (vfprintf-internal.c:1263)
+==22016==    by 0x48D579E: printf (printf.c:33)
+==22016==    by 0x10A266: skiplist_debug_print (skiplist.c:221)
+==22016==    by 0x1094BE: main (main.c:46)
+==22016== 
+==22016== LEAK SUMMARY:
+==22016==    definitely lost: 0 bytes in 0 blocks
+==22016==    indirectly lost: 0 bytes in 0 blocks
+==22016==      possibly lost: 0 bytes in 0 blocks
+==22016==    still reachable: 6,040 bytes in 13 blocks
+==22016==         suppressed: 0 bytes in 0 blocks
+==22016== 
+==22016== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+==22016== 
+==22016== 1 errors in context 1 of 2:
+==22016== Invalid read of size 8
+==22016==    at 0x10AA95: skiplist_trace (skiplist.c:441)
+==22016==    by 0x109FC7: skiplist_insert (skiplist.c:160)
+==22016==    by 0x109347: main (main.c:21)
+==22016==  Address 0x10 is not stack'd, malloc'd or (recently) free'd
+==22016== 
+==22016== 
+==22016== 1 errors in context 2 of 2:
+==22016== Invalid write of size 8
+==22016==    at 0x10AAF6: skiplist_trace (skiplist.c:453)
+==22016==    by 0x109FC7: skiplist_insert (skiplist.c:160)
+==22016==    by 0x109347: main (main.c:21)
+==22016==  Address 0x4aa19f8 is 0 bytes after a block of size 8 alloc'd
+==22016==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22016==    by 0x10AA12: skiplist_trace (skiplist.c:437)
+==22016==    by 0x109FC7: skiplist_insert (skiplist.c:160)
+==22016==    by 0x109347: main (main.c:21)
+==22016== 
+==22016== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+Segmentation fault (core dumped)
