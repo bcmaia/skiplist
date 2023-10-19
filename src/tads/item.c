@@ -15,12 +15,6 @@ typedef struct {
     char description[1 + MAX_DESCRIPTION_SIZE];
 } entry_t;
 
-/**
- * @brief the implementation of the item data structure. This is private to this
- * cfile.
- *
- * @note the atributes of this structure are stack stored.
- */
 struct _item_s {
     entry_t val;
 };
@@ -49,69 +43,29 @@ Item *item_new(void) {
     return item;
 }
 
-/**
- * @brief deletes
- *
- * @param item a pointer to the item.
- */
 void item_del(Item **item) {
     if (NULL == item) return; // err handling
     // NOTE: free(NULL) is fine, so no need to check *item.
-
-    // Debug printing if needed.
-    // #if DEBUG
-    //     printf("DELETING [%s] \n", (*item)->val.word);
-    // #endif
 
     free(*item);
     *item = NULL; // opionated ptr erasiong: this avoids dangling ptrs.
 }
 
-/**
- * @brief Compares two itens.
- *
- * It is almost just a wrapper around strcmp. Keep in mind it does not check if
- * the pointers are null.
- *
- * @param item_1 ptr to an item.
- * @param item_2 ptr to an item.
- * @return int y. y = 0 for equal items. y < 0 when item_2 is ordered
- * alfabatically after item_1 and y > 0 otherwise.
- *
- */
 int item_raw_cmp(const Item *item_1, const Item *item_2) {
     return strcmp(item_1->val.word, item_2->val.word);
 }
 
-/**
- * @brief Compares two itens.
- *
- * It is almost just a wrapper around strcmp; but it checks if the pointers are
- * null.
- *
- * @param item_1 ptr to an item.
- * @param item_2 ptr to an item.
- * @return int y. y = 0 for equal items. y < 0 when item_2 is ordered
- * alfabatically after item_1 and y > 0 otherwise.
- *
- */
 int item_cmp(const Item *item_1, const Item *item_2) {
     if (NULL == item_1 || NULL == item_2) return 0;
     return item_raw_cmp(item_1, item_2);
 }
 
-// TODO: finish this func
 void item_print(const Item *item) {
     item_print_word(item);
     printf(" ");
     item_print_description(item);
 }
 
-/**
- * @brief prints the word atribute found in the item entry.
- *
- * @param item ptr to the item.
- */
 void item_print_word(const Item *item) {
 #ifdef RELEASE
     printf("%s", item->val.word); // if release, trust and optimize
@@ -120,11 +74,6 @@ void item_print_word(const Item *item) {
 #endif
 }
 
-/**
- * @brief prints the description atribute found in the item entry.
- *
- * @param item ptr to the item.
- */
 void item_print_description(const Item *item) {
 #ifdef RELEASE
     printf("%s", item->val.description); // if release, trust and optimize
@@ -133,49 +82,37 @@ void item_print_description(const Item *item) {
 #endif
 }
 
-/**
- * @brief reads and constructs a item on the heap based on a user input from
- * stdin. It will read an input in the format `{W} {D}`, where W is a string
- * with no white space and D is a string that can include white spaces. A new
- * line "\n" will determine the end of the reading process.
- *
- * @return Item*
- *
- */
 Item *item_read(void) {
     entry_t e = (entry_t){0};
 
-    // TODO: proper error analysis and err handling 
     if (EOF == scanf("%50s %140[^\n]", e.word, e.description)) {
         return item_from_entry(e);
     } else {
         return item_from_entry(e);
     }
 
-    // TODO: fix later
+    status_t flag = read_word(e.word);
 
-//     status_t flag = read_word(e.word);
+    // WARNING (b): if RECOVER_FROM_BIG_INPUT is not set to a truthy value, then
+    // you must deal with the error elsewhere or it will cause reading
+    // misbehaviour.
+    #if RECOVER_FROM_BIG_INPUT
+        if (TOO_MUCH_ERR == flag) strutils_consume_word();
+        else if (EOF_ERR == flag) return NULL;
+    #else
+        if (TOO_MUCH_ERR == flag || EOF_ERR == flag) return NULL;
+    #endif
 
-//     // WARNING (b): if RECOVER_FROM_BIG_INPUT is not set to a truthy value, then
-//     // you must deal with the error elsewhere or it will cause reading
-//     // misbehaviour.
-// #if RECOVER_FROM_BIG_INPUT
-//     if (TOO_MUCH_ERR == flag) strutils_consume_word();
-//     else if (EOF_ERR == flag) return NULL;
-// #else
-//     if (TOO_MUCH_ERR == flag || EOF_ERR == flag) return NULL;
-// #endif
+        flag = read_description(e.description);
 
-//     flag = read_description(e.description);
+    #if RECOVER_FROM_BIG_INPUT
+        if (TOO_MUCH_ERR == flag) strutils_consume_line();
+        else if (EOF_ERR == flag) return NULL;
+    #else
+        if (TOO_MUCH_ERR == flag || EOF_ERR == flag) return NULL;
+    #endif
 
-// #if RECOVER_FROM_BIG_INPUT
-//     if (TOO_MUCH_ERR == flag) strutils_consume_line();
-//     else if (EOF_ERR == flag) return NULL;
-// #else
-//     if (TOO_MUCH_ERR == flag || EOF_ERR == flag) return NULL;
-// #endif
-
-//     return item_from_entry(e);
+    return item_from_entry(e);
 }
 
 Item *item_read_word(void) {
@@ -266,7 +203,6 @@ status_t read_word(char s[]) {
     s[i] = '\0';
 
     // Outputing the status
-    // if (EOF == c) return EOF_ERR;
     if (!strutils_isspace(c)) return TOO_MUCH_ERR;
     return SUCCESS;
 }
