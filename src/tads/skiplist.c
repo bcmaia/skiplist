@@ -464,11 +464,26 @@ static void node_deep_del(Node *node) {
     free(node);
 }
 
+/**
+ * @brief Checks if the skiplist contains a item.
+ * 
+ * @param skiplist a pointer to the skiplist.
+ * @param item a pointer to the item.
+ * @return _Bool \c 1 if the skiplist contains the item, \c 0 otherwise.
+ */
 _Bool skiplist_includes(const SkipList *skiplist, const Item *item) {
     Item *it = skiplist_search(skiplist, item);
     return it && 0 == item_cmp(it, item) ? 1 : 0;
 }
 
+/**
+ * @brief Searches the main lane of the skiplist for a item.
+ * 
+ * @param sentinel a pointer to the first node of the main lane.
+ * @param item a pointer to the item.
+ * @return Node* a pointer to the node that preceeds the node that contains the
+ * item, or NULL if the item is not in the skiplist.
+*/
 static inline Node *mainlane_search(Node *sentinel, const Item *item) {
     while (sentinel && item_cmp(sentinel->item, item) < 0) {
         sentinel = sentinel->next;
@@ -476,6 +491,14 @@ static inline Node *mainlane_search(Node *sentinel, const Item *item) {
     return sentinel;
 }
 
+/**
+ * @brief Searches the fast lane of the skiplist for a item.
+ * 
+ * @param sentinel a pointer to the first node of the fast lane.
+ * @param item a pointer to the item.
+ * @return Node* a pointer to the node that preceeds the node that contains the
+ * item, or NULL if the item is not in the skiplist.
+*/
 static inline Node *fastlane_search(Node *sentinel, const Item *item) {
     // WARNING: We assume `NULL != sentinel` and `NULL != item`
     if (NULL == sentinel) return NULL;
@@ -485,6 +508,13 @@ static inline Node *fastlane_search(Node *sentinel, const Item *item) {
     return sentinel;
 }
 
+/**
+ * @brief Searches the skiplist for a item, except for the main lane.
+ * 
+ * @param sentinel a pointer to the first node of the skiplist.
+ * @param item a pointer to the item.
+ * @return Node* a pointer to the node that preceeds the node that contains the
+*/
 static inline Node *express_search(Node *sentinel, const Item *item) {
     // WARNING: We assume `NULL != sentinel` and `NULL != item`
     if (NULL == sentinel) return NULL;
