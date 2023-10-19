@@ -1,0 +1,354 @@
+\hypertarget{skiplist_8c}{}\doxysection{src/tads/skiplist.c File Reference}
+\label{skiplist_8c}\index{src/tads/skiplist.c@{src/tads/skiplist.c}}
+
+
+Implementation of a Skip List data structure.  
+
+
+{\ttfamily \#include \char`\"{}tads/skiplist.\+h\char`\"{}}\newline
+Include dependency graph for skiplist.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{skiplist_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct__node__s}{\+\_\+node\+\_\+s}}
+\begin{DoxyCompactList}\small\item\em Node structure used in the Skip List. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct__skiplist__s}{\+\_\+skiplist\+\_\+s}}
+\begin{DoxyCompactList}\small\item\em Skip List data structure. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{struct__node__s}{\+\_\+node\+\_\+s}} \mbox{\hyperlink{skiplist_8c_a168286bc29bd5d61607257d15d77b59b}{Node}}
+\begin{DoxyCompactList}\small\item\em Node structure used in the Skip List. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{skiplist_8h_abdc97ffb081c6c8994f3eead70d2978a}{Skip\+List}} $\ast$ \mbox{\hyperlink{skiplist_8c_a98bb8e5a99208b58ec29bbd7d64cbedd}{skiplist\+\_\+new}} (void)
+\begin{DoxyCompactList}\small\item\em Creates a new heap-\/allocated empty skiplist. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{skiplist_8c_aae5ae1f1f95e2dcace6de9c846cacdd3}{skiplist\+\_\+del}} (\mbox{\hyperlink{skiplist_8h_abdc97ffb081c6c8994f3eead70d2978a}{Skip\+List}} $\ast$$\ast$skiplist)
+\begin{DoxyCompactList}\small\item\em An opinionated function to delete a skiplist (it cleans the memory used by it). \end{DoxyCompactList}\item 
+status\+\_\+t \mbox{\hyperlink{skiplist_8c_a1a9a0bbf0769919301d5c0db42faeb19}{skiplist\+\_\+insert}} (\mbox{\hyperlink{skiplist_8h_abdc97ffb081c6c8994f3eead70d2978a}{Skip\+List}} $\ast$skiplist, \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$item)
+\begin{DoxyCompactList}\small\item\em This function inserts an item into the skiplist. \end{DoxyCompactList}\item 
+\+\_\+\+Bool \mbox{\hyperlink{skiplist_8c_acff437241cd9592f25b66b06fb71b083}{skiplist\+\_\+debug\+\_\+validate}} (const \mbox{\hyperlink{skiplist_8h_abdc97ffb081c6c8994f3eead70d2978a}{Skip\+List}} $\ast$skiplist)
+\begin{DoxyCompactList}\small\item\em Checks if the current configurantion of a skiplist is valid and has no errors. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{skiplist_8c_a72921189b37a7adcd83c18292ccb6b0e}{skiplist\+\_\+debug\+\_\+print}} (const \mbox{\hyperlink{skiplist_8h_abdc97ffb081c6c8994f3eead70d2978a}{Skip\+List}} $\ast$skiplist)
+\begin{DoxyCompactList}\small\item\em prints all the levels of the skiplist and some debug info. Use it to aid debugging. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$ \mbox{\hyperlink{skiplist_8c_a4eab1e850d8d6a9a5a2bb4da0f9082ba}{skiplist\+\_\+search}} (const \mbox{\hyperlink{skiplist_8h_abdc97ffb081c6c8994f3eead70d2978a}{Skip\+List}} $\ast$skiplist, const \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$item)
+\begin{DoxyCompactList}\small\item\em Searched for an item in the skiplist. \end{DoxyCompactList}\item 
+status\+\_\+t \mbox{\hyperlink{skiplist_8c_ab9ac477712fd858187721b9254fb5b51}{skiplist\+\_\+update}} (\mbox{\hyperlink{skiplist_8h_abdc97ffb081c6c8994f3eead70d2978a}{Skip\+List}} $\ast$skiplist, \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$item)
+\begin{DoxyCompactList}\small\item\em Updates the value of an item in a skiplist. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$ \mbox{\hyperlink{skiplist_8c_a78d495fd7194b67e71aab194bd197be8}{skiplist\+\_\+remove}} (\mbox{\hyperlink{skiplist_8h_abdc97ffb081c6c8994f3eead70d2978a}{Skip\+List}} $\ast$skiplist, \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$item)
+\begin{DoxyCompactList}\small\item\em Removes an item from the skiplist. \end{DoxyCompactList}\item 
+status\+\_\+t \mbox{\hyperlink{skiplist_8c_a98a7c360ea09b3bf11d83fa1bea832fb}{skiplist\+\_\+print}} (const \mbox{\hyperlink{skiplist_8h_abdc97ffb081c6c8994f3eead70d2978a}{Skip\+List}} $\ast$skiplist, const char c)
+\begin{DoxyCompactList}\small\item\em Prints all the itens of the skiplist that starts with the character c. \end{DoxyCompactList}\item 
+\+\_\+\+Bool \mbox{\hyperlink{skiplist_8c_aa22b8a2ba3e543794818e80bda8b9c03}{skiplist\+\_\+is\+\_\+full}} (const \mbox{\hyperlink{skiplist_8h_abdc97ffb081c6c8994f3eead70d2978a}{Skip\+List}} $\ast$skiplist)
+\begin{DoxyCompactList}\small\item\em Checks if the skip list has reach maximun lengyh. \end{DoxyCompactList}\item 
+\+\_\+\+Bool \mbox{\hyperlink{skiplist_8c_a745f4b4a5c153fdf1dc0e3b44489dc1f}{skiplist\+\_\+is\+\_\+empty}} (const \mbox{\hyperlink{skiplist_8h_abdc97ffb081c6c8994f3eead70d2978a}{Skip\+List}} $\ast$skiplist)
+\begin{DoxyCompactList}\small\item\em Checks if the list is empty. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{skiplist_8c_abfdbabc72f9a69cd32efe790a4c1a1fc}{skiplist\+\_\+length}} (const \mbox{\hyperlink{skiplist_8h_abdc97ffb081c6c8994f3eead70d2978a}{Skip\+List}} $\ast$skiplist)
+\begin{DoxyCompactList}\small\item\em A getter to the skiplist length. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{skiplist_8c_a852d028238f6bc1dafaa1b17914ab15b}{skiplist\+\_\+height}} (const \mbox{\hyperlink{skiplist_8h_abdc97ffb081c6c8994f3eead70d2978a}{Skip\+List}} $\ast$skiplist)
+\begin{DoxyCompactList}\small\item\em A getter to the skiplist height. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{skiplist_8c_a4006186ecc3bee1f134d751976b06bc2}{skiplist\+\_\+trim}} (\mbox{\hyperlink{skiplist_8h_abdc97ffb081c6c8994f3eead70d2978a}{Skip\+List}} $\ast$skiplist)
+\begin{DoxyCompactList}\small\item\em Reduces the height of the skiplist if it has small lanes on the top. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Implementation of a Skip List data structure. 
+
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{skiplist_8c_a168286bc29bd5d61607257d15d77b59b}\label{skiplist_8c_a168286bc29bd5d61607257d15d77b59b}} 
+\index{skiplist.c@{skiplist.c}!Node@{Node}}
+\index{Node@{Node}!skiplist.c@{skiplist.c}}
+\doxysubsubsection{\texorpdfstring{Node}{Node}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{struct__node__s}{\+\_\+node\+\_\+s}} \mbox{\hyperlink{skiplist_8c_a168286bc29bd5d61607257d15d77b59b}{Node}}}
+
+
+
+Node structure used in the Skip List. 
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{skiplist_8c_a72921189b37a7adcd83c18292ccb6b0e}\label{skiplist_8c_a72921189b37a7adcd83c18292ccb6b0e}} 
+\index{skiplist.c@{skiplist.c}!skiplist\_debug\_print@{skiplist\_debug\_print}}
+\index{skiplist\_debug\_print@{skiplist\_debug\_print}!skiplist.c@{skiplist.c}}
+\doxysubsubsection{\texorpdfstring{skiplist\_debug\_print()}{skiplist\_debug\_print()}}
+{\footnotesize\ttfamily void skiplist\+\_\+debug\+\_\+print (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{skiplist_8h_abdc97ffb081c6c8994f3eead70d2978a}{Skip\+List}} $\ast$}]{skiplist }\end{DoxyParamCaption})}
+
+
+
+prints all the levels of the skiplist and some debug info. Use it to aid debugging. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em skiplist} & ptr to the skiplist. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{skiplist_8c_acff437241cd9592f25b66b06fb71b083}\label{skiplist_8c_acff437241cd9592f25b66b06fb71b083}} 
+\index{skiplist.c@{skiplist.c}!skiplist\_debug\_validate@{skiplist\_debug\_validate}}
+\index{skiplist\_debug\_validate@{skiplist\_debug\_validate}!skiplist.c@{skiplist.c}}
+\doxysubsubsection{\texorpdfstring{skiplist\_debug\_validate()}{skiplist\_debug\_validate()}}
+{\footnotesize\ttfamily \+\_\+\+Bool skiplist\+\_\+debug\+\_\+validate (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{skiplist_8h_abdc97ffb081c6c8994f3eead70d2978a}{Skip\+List}} $\ast$}]{skiplist }\end{DoxyParamCaption})}
+
+
+
+Checks if the current configurantion of a skiplist is valid and has no errors. 
+
+Use this to debug the skiplist
+
+
+\begin{DoxyParams}{Parameters}
+{\em skiplist} & a ptr to the skiplist. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\+\_\+\+Bool {\ttfamily 1} if the skiplist if valid, {\ttfamily 0} if the skiplist has one or more errors (invalid). 
+\end{DoxyReturn}
+\mbox{\Hypertarget{skiplist_8c_aae5ae1f1f95e2dcace6de9c846cacdd3}\label{skiplist_8c_aae5ae1f1f95e2dcace6de9c846cacdd3}} 
+\index{skiplist.c@{skiplist.c}!skiplist\_del@{skiplist\_del}}
+\index{skiplist\_del@{skiplist\_del}!skiplist.c@{skiplist.c}}
+\doxysubsubsection{\texorpdfstring{skiplist\_del()}{skiplist\_del()}}
+{\footnotesize\ttfamily void skiplist\+\_\+del (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{skiplist_8h_abdc97ffb081c6c8994f3eead70d2978a}{Skip\+List}} $\ast$$\ast$}]{skiplist }\end{DoxyParamCaption})}
+
+
+
+An opinionated function to delete a skiplist (it cleans the memory used by it). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em skiplist} & a ptr to the skiplist.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+this will set your ptr to NULL to avoid dangling ptrs. 
+\end{DoxyNote}
+\mbox{\Hypertarget{skiplist_8c_a852d028238f6bc1dafaa1b17914ab15b}\label{skiplist_8c_a852d028238f6bc1dafaa1b17914ab15b}} 
+\index{skiplist.c@{skiplist.c}!skiplist\_height@{skiplist\_height}}
+\index{skiplist\_height@{skiplist\_height}!skiplist.c@{skiplist.c}}
+\doxysubsubsection{\texorpdfstring{skiplist\_height()}{skiplist\_height()}}
+{\footnotesize\ttfamily size\+\_\+t skiplist\+\_\+height (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{skiplist_8h_abdc97ffb081c6c8994f3eead70d2978a}{Skip\+List}} $\ast$}]{skiplist }\end{DoxyParamCaption})}
+
+
+
+A getter to the skiplist height. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em skiplist} & a ptr to the skiplist. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+size\+\_\+t the height of the skiplist. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{skiplist_8c_a1a9a0bbf0769919301d5c0db42faeb19}\label{skiplist_8c_a1a9a0bbf0769919301d5c0db42faeb19}} 
+\index{skiplist.c@{skiplist.c}!skiplist\_insert@{skiplist\_insert}}
+\index{skiplist\_insert@{skiplist\_insert}!skiplist.c@{skiplist.c}}
+\doxysubsubsection{\texorpdfstring{skiplist\_insert()}{skiplist\_insert()}}
+{\footnotesize\ttfamily status\+\_\+t skiplist\+\_\+insert (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{skiplist_8h_abdc97ffb081c6c8994f3eead70d2978a}{Skip\+List}} $\ast$}]{skiplist,  }\item[{\mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$}]{item }\end{DoxyParamCaption})}
+
+
+
+This function inserts an item into the skiplist. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em skiplist} & a ptr to the skip list. \\
+\hline
+{\em item} & a ptr to the item. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+status\+\_\+t
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+make sure the ptr are valid. NULL ptrs will be caught as errors, but other tipe of invalid pointers will not.
+\end{DoxyWarning}
+\begin{DoxyNote}{Note}
+it uses rand as source of randomness. 
+\end{DoxyNote}
+\mbox{\Hypertarget{skiplist_8c_a745f4b4a5c153fdf1dc0e3b44489dc1f}\label{skiplist_8c_a745f4b4a5c153fdf1dc0e3b44489dc1f}} 
+\index{skiplist.c@{skiplist.c}!skiplist\_is\_empty@{skiplist\_is\_empty}}
+\index{skiplist\_is\_empty@{skiplist\_is\_empty}!skiplist.c@{skiplist.c}}
+\doxysubsubsection{\texorpdfstring{skiplist\_is\_empty()}{skiplist\_is\_empty()}}
+{\footnotesize\ttfamily \+\_\+\+Bool skiplist\+\_\+is\+\_\+empty (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{skiplist_8h_abdc97ffb081c6c8994f3eead70d2978a}{Skip\+List}} $\ast$}]{skiplist }\end{DoxyParamCaption})}
+
+
+
+Checks if the list is empty. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em skiplist} & ptr to the list. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\+\_\+\+Bool {\ttfamily 1} if the list is empty, {\ttfamily 0} otherwise. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{skiplist_8c_aa22b8a2ba3e543794818e80bda8b9c03}\label{skiplist_8c_aa22b8a2ba3e543794818e80bda8b9c03}} 
+\index{skiplist.c@{skiplist.c}!skiplist\_is\_full@{skiplist\_is\_full}}
+\index{skiplist\_is\_full@{skiplist\_is\_full}!skiplist.c@{skiplist.c}}
+\doxysubsubsection{\texorpdfstring{skiplist\_is\_full()}{skiplist\_is\_full()}}
+{\footnotesize\ttfamily \+\_\+\+Bool skiplist\+\_\+is\+\_\+full (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{skiplist_8h_abdc97ffb081c6c8994f3eead70d2978a}{Skip\+List}} $\ast$}]{skiplist }\end{DoxyParamCaption})}
+
+
+
+Checks if the skip list has reach maximun lengyh. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em skiplist} & ptr to the list. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\+\_\+\+Bool {\ttfamily 1} if max length was reached, {\ttfamily 0} otherwise.
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+if SKIPLIST\+\_\+\+MAX\+\_\+\+LENGTH is not defined, this will always return flase. 
+\end{DoxyNote}
+\mbox{\Hypertarget{skiplist_8c_abfdbabc72f9a69cd32efe790a4c1a1fc}\label{skiplist_8c_abfdbabc72f9a69cd32efe790a4c1a1fc}} 
+\index{skiplist.c@{skiplist.c}!skiplist\_length@{skiplist\_length}}
+\index{skiplist\_length@{skiplist\_length}!skiplist.c@{skiplist.c}}
+\doxysubsubsection{\texorpdfstring{skiplist\_length()}{skiplist\_length()}}
+{\footnotesize\ttfamily size\+\_\+t skiplist\+\_\+length (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{skiplist_8h_abdc97ffb081c6c8994f3eead70d2978a}{Skip\+List}} $\ast$}]{skiplist }\end{DoxyParamCaption})}
+
+
+
+A getter to the skiplist length. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em skiplist} & a ptr to the skiplist. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+size\+\_\+t the length of the skiplist. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{skiplist_8c_a98bb8e5a99208b58ec29bbd7d64cbedd}\label{skiplist_8c_a98bb8e5a99208b58ec29bbd7d64cbedd}} 
+\index{skiplist.c@{skiplist.c}!skiplist\_new@{skiplist\_new}}
+\index{skiplist\_new@{skiplist\_new}!skiplist.c@{skiplist.c}}
+\doxysubsubsection{\texorpdfstring{skiplist\_new()}{skiplist\_new()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{skiplist_8h_abdc97ffb081c6c8994f3eead70d2978a}{Skip\+List}}$\ast$ skiplist\+\_\+new (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Creates a new heap-\/allocated empty skiplist. 
+
+\begin{DoxyReturn}{Returns}
+Skip\+List$\ast$ ptr to the skip list, WITH OWNERSHIP, or NULL in case of error. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{skiplist_8c_a98a7c360ea09b3bf11d83fa1bea832fb}\label{skiplist_8c_a98a7c360ea09b3bf11d83fa1bea832fb}} 
+\index{skiplist.c@{skiplist.c}!skiplist\_print@{skiplist\_print}}
+\index{skiplist\_print@{skiplist\_print}!skiplist.c@{skiplist.c}}
+\doxysubsubsection{\texorpdfstring{skiplist\_print()}{skiplist\_print()}}
+{\footnotesize\ttfamily status\+\_\+t skiplist\+\_\+print (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{skiplist_8h_abdc97ffb081c6c8994f3eead70d2978a}{Skip\+List}} $\ast$}]{skiplist,  }\item[{const char}]{c }\end{DoxyParamCaption})}
+
+
+
+Prints all the itens of the skiplist that starts with the character c. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em skiplist} & ptr to the skiplist. \\
+\hline
+{\em c} & the character we are interested on. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+status\+\_\+t {\ttfamily SUCCESS} for a successiful print, {\ttfamily ERROR} if any errors occurr. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{skiplist_8c_a78d495fd7194b67e71aab194bd197be8}\label{skiplist_8c_a78d495fd7194b67e71aab194bd197be8}} 
+\index{skiplist.c@{skiplist.c}!skiplist\_remove@{skiplist\_remove}}
+\index{skiplist\_remove@{skiplist\_remove}!skiplist.c@{skiplist.c}}
+\doxysubsubsection{\texorpdfstring{skiplist\_remove()}{skiplist\_remove()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}}$\ast$ skiplist\+\_\+remove (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{skiplist_8h_abdc97ffb081c6c8994f3eead70d2978a}{Skip\+List}} $\ast$}]{skiplist,  }\item[{\mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$}]{item }\end{DoxyParamCaption})}
+
+
+
+Removes an item from the skiplist. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em skiplist} & A pointer to a skiplist. \\
+\hline
+{\em item} & A pointer to the item that will be used as reference in the search for the correct item to be removed. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Item$\ast$ The removed item (with ownership) or NULL if it was not found or if an error ocurred.
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+it is up to you to delete the returned item. 
+
+the returned ptr and the item parameter ptr may be the same, but the probabily are diferrent. If the item ptr is aready in the list (not the item value, the ptr), then the pointers are going to be equal. Keep that in mind to avoid double freeing the memory. 
+\end{DoxyNote}
+\mbox{\Hypertarget{skiplist_8c_a4eab1e850d8d6a9a5a2bb4da0f9082ba}\label{skiplist_8c_a4eab1e850d8d6a9a5a2bb4da0f9082ba}} 
+\index{skiplist.c@{skiplist.c}!skiplist\_search@{skiplist\_search}}
+\index{skiplist\_search@{skiplist\_search}!skiplist.c@{skiplist.c}}
+\doxysubsubsection{\texorpdfstring{skiplist\_search()}{skiplist\_search()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}}$\ast$ skiplist\+\_\+search (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{skiplist_8h_abdc97ffb081c6c8994f3eead70d2978a}{Skip\+List}} $\ast$}]{skiplist,  }\item[{const \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$}]{item }\end{DoxyParamCaption})}
+
+
+
+Searched for an item in the skiplist. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em skiplist} & ptr to the skiplist. \\
+\hline
+{\em item} & ptr to the item. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Item$\ast$ NULL if nothing is found or, if founded, a ptr to the item WITHOUT OWNERSHIP. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{skiplist_8c_a4006186ecc3bee1f134d751976b06bc2}\label{skiplist_8c_a4006186ecc3bee1f134d751976b06bc2}} 
+\index{skiplist.c@{skiplist.c}!skiplist\_trim@{skiplist\_trim}}
+\index{skiplist\_trim@{skiplist\_trim}!skiplist.c@{skiplist.c}}
+\doxysubsubsection{\texorpdfstring{skiplist\_trim()}{skiplist\_trim()}}
+{\footnotesize\ttfamily void skiplist\+\_\+trim (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{skiplist_8h_abdc97ffb081c6c8994f3eead70d2978a}{Skip\+List}} $\ast$}]{skiplist }\end{DoxyParamCaption})}
+
+
+
+Reduces the height of the skiplist if it has small lanes on the top. 
+
+Every lane above the main lane (the bottom lane, aka\+: the true lane), if they exist, should have at least 2 itens. Otherwise, there would be no peformance gain provided by the lane ;)
+
+
+\begin{DoxyParams}{Parameters}
+{\em skiplist} & a pointer to the skiplist. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{skiplist_8c_ab9ac477712fd858187721b9254fb5b51}\label{skiplist_8c_ab9ac477712fd858187721b9254fb5b51}} 
+\index{skiplist.c@{skiplist.c}!skiplist\_update@{skiplist\_update}}
+\index{skiplist\_update@{skiplist\_update}!skiplist.c@{skiplist.c}}
+\doxysubsubsection{\texorpdfstring{skiplist\_update()}{skiplist\_update()}}
+{\footnotesize\ttfamily status\+\_\+t skiplist\+\_\+update (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{skiplist_8h_abdc97ffb081c6c8994f3eead70d2978a}{Skip\+List}} $\ast$}]{skiplist,  }\item[{\mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$}]{item }\end{DoxyParamCaption})}
+
+
+
+Updates the value of an item in a skiplist. 
+
+Searches an skiplist for an item and updates it to a new value if it was found.
+
+
+\begin{DoxyParams}{Parameters}
+{\em skiplist} & a ptr to the skiplist. \\
+\hline
+{\em item} & the item we are searching and its new value. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+status\+\_\+t {\ttfamily SUCCESS} if the item was found and updated to a new value, {\ttfamily NUL\+\_\+\+ERR} if any critial pointer passed to the function is NULL, {\ttfamily ALLOC\+\_\+\+ERR} if there was an issue allocating memory during the execution of the program, {\ttfamily NOT\+\_\+\+FOUND\+\_\+\+ERR} if the item is not found on the skiplist, {\ttfamily ERROR} if an unidentified error ocurred during the trace and search phase.
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Keep in mind an item has a key, which is used to identify it, and a value. The item you pass as a parameter should have a key to an item already on the skiplist and a new value. 
+\end{DoxyNote}

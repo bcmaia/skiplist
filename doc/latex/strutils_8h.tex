@@ -1,0 +1,116 @@
+\hypertarget{strutils_8h}{}\doxysection{include/utils/strutils.h File Reference}
+\label{strutils_8h}\index{include/utils/strutils.h@{include/utils/strutils.h}}
+
+
+Header file for string utility functions.  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+Include dependency graph for strutils.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=202pt]{strutils_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{strutils_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{strutils_8h_a853582fd0453fd240cbdb8a56bce2fe5}{strutils\+\_\+consume\+\_\+line}} (void)
+\begin{DoxyCompactList}\small\item\em This function will read from the stdin until a new line (\textquotesingle{}~\newline
+\textquotesingle{}) is read. All the characters it reads will be discarted. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{strutils_8h_a11b89b2fec5190481db6df639806c14b}{strutils\+\_\+consume\+\_\+word}} (void)
+\begin{DoxyCompactList}\small\item\em This function will read characters from stdin until the first white space is encountered. All the characters read will be discarded. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{strutils_8h_ab5df79f243de0bc081b4284bd3457470}{strutils\+\_\+consume\+\_\+spaces}} (void)
+\begin{DoxyCompactList}\small\item\em This function will read characters from stdin until the first white space is encountered. All the characters read will be discarded. \end{DoxyCompactList}\item 
+\+\_\+\+Bool \mbox{\hyperlink{strutils_8h_aac16bb0cc9bed2d319384bae1fdb4eab}{strutils\+\_\+isspace}} (const char c)
+\begin{DoxyCompactList}\small\item\em This function will return true if the given character is a white space character. It will return false otherwise. \end{DoxyCompactList}\item 
+\+\_\+\+Bool \mbox{\hyperlink{strutils_8h_ac727dd85e52766513b6f1d9728945f02}{strutils\+\_\+isspace\+\_\+not\+\_\+newline}} (const char c)
+\begin{DoxyCompactList}\small\item\em This function will return true if the given character is a white space character that is not a new line (\textquotesingle{}~\newline
+\textquotesingle{}). It will return false otherwise. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Header file for string utility functions. 
+
+This header defines utility functions for working with strings, including operations like string manipulation and parsing. 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{strutils_8h_a853582fd0453fd240cbdb8a56bce2fe5}\label{strutils_8h_a853582fd0453fd240cbdb8a56bce2fe5}} 
+\index{strutils.h@{strutils.h}!strutils\_consume\_line@{strutils\_consume\_line}}
+\index{strutils\_consume\_line@{strutils\_consume\_line}!strutils.h@{strutils.h}}
+\doxysubsubsection{\texorpdfstring{strutils\_consume\_line()}{strutils\_consume\_line()}}
+{\footnotesize\ttfamily void strutils\+\_\+consume\+\_\+line (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+This function will read from the stdin until a new line (\textquotesingle{}~\newline
+\textquotesingle{}) is read. All the characters it reads will be discarted. 
+
+\mbox{\Hypertarget{strutils_8h_ab5df79f243de0bc081b4284bd3457470}\label{strutils_8h_ab5df79f243de0bc081b4284bd3457470}} 
+\index{strutils.h@{strutils.h}!strutils\_consume\_spaces@{strutils\_consume\_spaces}}
+\index{strutils\_consume\_spaces@{strutils\_consume\_spaces}!strutils.h@{strutils.h}}
+\doxysubsubsection{\texorpdfstring{strutils\_consume\_spaces()}{strutils\_consume\_spaces()}}
+{\footnotesize\ttfamily int strutils\+\_\+consume\+\_\+spaces (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+This function will read characters from stdin until the first white space is encountered. All the characters read will be discarded. 
+
+\mbox{\Hypertarget{strutils_8h_a11b89b2fec5190481db6df639806c14b}\label{strutils_8h_a11b89b2fec5190481db6df639806c14b}} 
+\index{strutils.h@{strutils.h}!strutils\_consume\_word@{strutils\_consume\_word}}
+\index{strutils\_consume\_word@{strutils\_consume\_word}!strutils.h@{strutils.h}}
+\doxysubsubsection{\texorpdfstring{strutils\_consume\_word()}{strutils\_consume\_word()}}
+{\footnotesize\ttfamily void strutils\+\_\+consume\+\_\+word (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+This function will read characters from stdin until the first white space is encountered. All the characters read will be discarded. 
+
+\mbox{\Hypertarget{strutils_8h_aac16bb0cc9bed2d319384bae1fdb4eab}\label{strutils_8h_aac16bb0cc9bed2d319384bae1fdb4eab}} 
+\index{strutils.h@{strutils.h}!strutils\_isspace@{strutils\_isspace}}
+\index{strutils\_isspace@{strutils\_isspace}!strutils.h@{strutils.h}}
+\doxysubsubsection{\texorpdfstring{strutils\_isspace()}{strutils\_isspace()}}
+{\footnotesize\ttfamily \+\_\+\+Bool strutils\+\_\+isspace (\begin{DoxyParamCaption}\item[{const char}]{c }\end{DoxyParamCaption})}
+
+
+
+This function will return true if the given character is a white space character. It will return false otherwise. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em c} & the character to be tested. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\+\_\+\+Bool true if the given character is a white space character. It will return false otherwise. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{strutils_8h_ac727dd85e52766513b6f1d9728945f02}\label{strutils_8h_ac727dd85e52766513b6f1d9728945f02}} 
+\index{strutils.h@{strutils.h}!strutils\_isspace\_not\_newline@{strutils\_isspace\_not\_newline}}
+\index{strutils\_isspace\_not\_newline@{strutils\_isspace\_not\_newline}!strutils.h@{strutils.h}}
+\doxysubsubsection{\texorpdfstring{strutils\_isspace\_not\_newline()}{strutils\_isspace\_not\_newline()}}
+{\footnotesize\ttfamily \+\_\+\+Bool strutils\+\_\+isspace\+\_\+not\+\_\+newline (\begin{DoxyParamCaption}\item[{const char}]{c }\end{DoxyParamCaption})}
+
+
+
+This function will return true if the given character is a white space character that is not a new line (\textquotesingle{}~\newline
+\textquotesingle{}). It will return false otherwise. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em c} & the character to be tested. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\+\_\+\+Bool true if the given character is a white space character that is not a new line (\textquotesingle{}~\newline
+\textquotesingle{}). It will return false otherwise. 
+\end{DoxyReturn}

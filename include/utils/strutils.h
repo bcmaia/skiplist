@@ -1,3 +1,12 @@
+/**
+ * @file strutils.h
+ * @brief Header file for string utility functions.
+ *
+ * This header defines utility functions for working with strings, including
+ * operations like string manipulation and parsing.
+ */
+
+
 #ifndef STRUTILS_H_INCLUDED
 #define STRUTILS_H_INCLUDED
 

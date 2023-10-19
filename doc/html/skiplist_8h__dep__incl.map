@@ -1,0 +1,5 @@
+<map id="include/tads/skiplist.h" name="include/tads/skiplist.h">
+<area shape="rect" id="node1" title="this header declares a abstract data structure skiplist and the functions that can be used with it." alt="" coords="59,5,223,32"/>
+<area shape="rect" id="node2" href="$skiplist_8c.html" title="Implementation of a Skip List data structure." alt="" coords="5,80,140,107"/>
+<area shape="rect" id="node3" href="$main_8c.html" title=" " alt="" coords="164,80,253,107"/>
+</map>

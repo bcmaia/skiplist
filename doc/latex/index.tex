@@ -1,0 +1,86 @@
+\label{index_md_readme}%
+\Hypertarget{index_md_readme}%
+ ~\newline
+\hypertarget{index_autotoc_md1}{}\doxysubsubsection{Repository\+: $<$a href=\char`\"{}https\+://github.\+com/bcmaia/skiplist\char`\"{}$>$https\+://github.\+com/bcmaia/skiplist$<$/a$>$}\label{index_autotoc_md1}
+\hypertarget{index_autotoc_md2}{}\doxysubsubsection{Students\+:}\label{index_autotoc_md2}
+
+\begin{DoxyItemize}
+\item Bernardo Maia Coelho -\/ 12542481
+\item Rodrigo de Freitas Lima -\/ 12547510
+\end{DoxyItemize}
+
+~\newline
+
+
+This C program provides a command-\/line interface to perform various operations on a dictionary. This project is a part of the Abstract Data Structures subject, aiming to implement the Skip\+List data structure in C and demonstrate its usage.\hypertarget{index_autotoc_md3}{}\doxysection{Overview}\label{index_autotoc_md3}
+A Skip\+List is a data structure that allows efficient insertion, deletion, and searching of items. This program accepts commands from the user to perform these operations.\hypertarget{index_autotoc_md4}{}\doxysection{Documentation}\label{index_autotoc_md4}
+We documented the project using Doxygen standards. You can find the output of Doxygen in the {\ttfamily ./doc} folder.\hypertarget{index_autotoc_md5}{}\doxysection{Code Structure}\label{index_autotoc_md5}
+The program consists of the following main components\+:
+
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Execution Loop}}\+: The core of the program is an infinite loop that waits for user input and performs various operations based on the provided command.
+\item {\bfseries{Operations}}\+:
+\begin{DoxyItemize}
+\item {\bfseries{Insertion}}\+: The user can insert an item into the Skip\+List using the \char`\"{}insercao\char`\"{} command. The program reads an item, inserts it into the Skip\+List, and handles any errors.
+\item {\bfseries{Update}}\+: The \char`\"{}alteracao\char`\"{} command allows the user to update an existing item in the Skip\+List. It reads an item, performs the update, and handles errors.
+\item {\bfseries{Removal}}\+: The \char`\"{}remocao\char`\"{} command is used to remove an item from the Skip\+List. It reads an item, removes it from the Skip\+List, and manages errors.
+\item {\bfseries{Search}}\+: The \char`\"{}busca\char`\"{} command allows the user to search for an item in the Skip\+List. It reads an item, searches for it, and prints the result or handles errors.
+\item {\bfseries{Print}}\+: The \char`\"{}impressao\char`\"{} command is used to print the Skip\+List with different formatting options. The program reads the format specifier and prints the Skip\+List accordingly, handling errors.
+\item {\bfseries{Debug}}\+: The \char`\"{}debug\char`\"{} command prints the current state of the Skip\+List for debugging purposes.
+\item {\bfseries{Operation Not Identified}}\+: If the program encounters an unrecognized command, it outputs \char`\"{}\+OPERACAO INVALIDA.\char`\"{}
+\end{DoxyItemize}
+\item {\bfseries{Cleanup}}\+: After the user exits the program, it deallocates memory and cleans up the Skip\+List to prevent memory leaks.
+\end{DoxyEnumerate}\hypertarget{index_autotoc_md6}{}\doxysection{Usage}\label{index_autotoc_md6}
+To use the program, compile it and run the executable. You can then input commands and data to perform Skip\+List operations. Invalid commands will result in the \char`\"{}\+OPERACAO INVALIDA\char`\"{} message.
+
+This program provides a versatile and interactive way to work with Skip\+Lists, enabling insertion, updating, removal, searching, and visualization of the data structure\textquotesingle{}s contents.\hypertarget{index_autotoc_md7}{}\doxysection{Compilation}\label{index_autotoc_md7}
+\hypertarget{index_autotoc_md8}{}\doxysubsection{Build System, Language, and Tooling}\label{index_autotoc_md8}
+We used a robust Makefile to streamline the development process. You can find more about this Makefile at \href{https://github.com/bcmaia/MasterMaker}{\texttt{ github.\+com/bcmaia/\+Master\+Maker}}. The code was compiled and tested using {\ttfamily gcc} with the C99, C11, and C17 standards, working as expected for those specifications.\hypertarget{index_autotoc_md9}{}\doxysubsection{Environment}\label{index_autotoc_md9}
+We tested the program on a {\ttfamily Pop!\+\_\+\+OS 22.\+04 LTS} x86 Linux system. Therefore, it should work on most modern Debian-\/based Linux distributions.\hypertarget{index_autotoc_md10}{}\doxysubsection{Setup}\label{index_autotoc_md10}
+To download the needed tools on Pop!\+\_\+\+OS or most modern Debian-\/based Linux distributions\+:
+
+Downloading the compiler tooling\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{sudo apt update}
+\DoxyCodeLine{sudo apt install -\/y build-\/essential}
+
+\end{DoxyCode}
+
+
+Make sure you have Git installed\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{sudo apt install -\/y git}
+
+\end{DoxyCode}
+
+
+To clone the repository\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git clone https://github.com/bcmaia/skiplist}
+
+\end{DoxyCode}
+\hypertarget{index_autotoc_md11}{}\doxysubsection{Compilation}\label{index_autotoc_md11}
+To compile the project, navigate to the project\textquotesingle{}s directory and run\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make all}
+
+\end{DoxyCode}
+
+
+To run\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make run}
+
+\end{DoxyCode}
+ 

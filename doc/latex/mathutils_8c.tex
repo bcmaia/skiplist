@@ -1,0 +1,54 @@
+\hypertarget{mathutils_8c}{}\doxysection{src/utils/mathutils.c File Reference}
+\label{mathutils_8c}\index{src/utils/mathutils.c@{src/utils/mathutils.c}}
+{\ttfamily \#include \char`\"{}mathutils.\+h\char`\"{}}\newline
+Include dependency graph for mathutils.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=193pt]{mathutils_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+float \mbox{\hyperlink{mathutils_8c_a8cfd537fadd879c1e26d448704b141ad}{rnd\+\_\+normalized}} (void)
+\begin{DoxyCompactList}\small\item\em Returns a random float in the range \mbox{[}0, 1). \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{mathutils_8c_a847268428bdf736e3c4ebcd155161d9e}{geometric\+\_\+dist\+\_\+test}} (float p, int max\+\_\+val)
+\begin{DoxyCompactList}\small\item\em returns the number of times that the random function \mbox{\hyperlink{mathutils_8h_a8cfd537fadd879c1e26d448704b141ad}{rnd\+\_\+normalized()}} returns a value less than or equal to p. That number is bounded by max\+\_\+val. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{mathutils_8c_a847268428bdf736e3c4ebcd155161d9e}\label{mathutils_8c_a847268428bdf736e3c4ebcd155161d9e}} 
+\index{mathutils.c@{mathutils.c}!geometric\_dist\_test@{geometric\_dist\_test}}
+\index{geometric\_dist\_test@{geometric\_dist\_test}!mathutils.c@{mathutils.c}}
+\doxysubsubsection{\texorpdfstring{geometric\_dist\_test()}{geometric\_dist\_test()}}
+{\footnotesize\ttfamily int geometric\+\_\+dist\+\_\+test (\begin{DoxyParamCaption}\item[{float}]{p,  }\item[{int}]{max\+\_\+val }\end{DoxyParamCaption})}
+
+
+
+returns the number of times that the random function \mbox{\hyperlink{mathutils_8h_a8cfd537fadd879c1e26d448704b141ad}{rnd\+\_\+normalized()}} returns a value less than or equal to p. That number is bounded by max\+\_\+val. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & the probability of success of the geometric distribution. p = \mbox{[}0, 1) \\
+\hline
+{\em max\+\_\+val} & the maximum value that the geometric distribution. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mathutils_8c_a8cfd537fadd879c1e26d448704b141ad}\label{mathutils_8c_a8cfd537fadd879c1e26d448704b141ad}} 
+\index{mathutils.c@{mathutils.c}!rnd\_normalized@{rnd\_normalized}}
+\index{rnd\_normalized@{rnd\_normalized}!mathutils.c@{mathutils.c}}
+\doxysubsubsection{\texorpdfstring{rnd\_normalized()}{rnd\_normalized()}}
+{\footnotesize\ttfamily float rnd\+\_\+normalized (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Returns a random float in the range \mbox{[}0, 1). 
+
+\begin{DoxyReturn}{Returns}
+float 
+\end{DoxyReturn}

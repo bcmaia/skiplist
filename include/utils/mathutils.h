@@ -1,3 +1,12 @@
+/**
+ * @file mathutils.h
+ * @brief Header file for mathematical utility functions.
+ *
+ * This header contains utility functions for mathematical operations, such
+ * as calculations, conversions, and other math-related tasks.
+ */
+
+
 #ifndef MATHUTILS_H_INCLUDED
 #define MATHUTILS_H_INCLUDED
 
@@ -22,5 +31,6 @@ float rnd_normalized (void);
  * 
 */
 int geometric_dist_test (float p, int max_val);
+// NOTE: We ended up not using this one.
 
 #endif // MATHUTILS_H_INCLUDED

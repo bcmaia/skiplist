@@ -1,9 +1,8 @@
 /**
  * @file skiplist.h
- * @author Bernardo M. C. (b), (bernardomc@usp.br, bcmaiax@gmail.com)
  * @brief this header declares a abstract data structure `skiplist` and the
  * functions that can be used with it.
- * @version 0.1
+ * @version 1.5
  * @date 2023-10-09
  *
  * @copyright Copyright (c) 2023
@@ -18,7 +17,7 @@
 //=============================================================================/
 
 #include "tads/item.h"
-#include "tads/types.h"
+#include "tads/tad_types.h"
 #include "utils/mathutils.h"
 #include <stdio.h>
 #include <stdlib.h>

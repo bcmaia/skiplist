@@ -1,12 +1,10 @@
 /**
- * @file constants.h
- * @author Bernardo M. C. (b), (bernardomc@usp.br, bcmaiax@gmail.com)
+ * @file tad_constants.h
  * @brief This file contains constants that are used through out the tads.
- * @version 0.1
- * @date 2023-10-09
- * 
- * @copyright Copyright (c) 2023
- * 
+ *
+ * This header file contains project-specific constants that are used
+ * throughout the codebase. It provides a central location for managing critical
+ * constants.
  */
 
 #ifndef CONSTANTS_H_INCLUDED

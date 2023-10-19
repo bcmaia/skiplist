@@ -1,18 +1,17 @@
 /**
- * @file types.h
- * @author your name (you@domain.com)
- * @brief 
- * @version 0.1
- * @date 2023-10-09
- * 
- * @copyright Copyright (c) 2023
- * 
+ * @file tad_types.h
+ * @brief Header file for custom data types and enumerations.
+ *
+ * This header file defines custom data types and enumerations used
+ * throughout the project. These types are designed to enhance code
+ * clarity and maintainability by giving meaningful names to data.
+ *
  */
 
-#ifndef TYPES_H_INCLUDED
-#define TYPES_H_INCLUDED
+#ifndef TAD_TYPES_H_INCLUDED
+#define TAD_TYPES_H_INCLUDED
 
-#include "tads/constants.h"
+#include "tads/tad_constants.h"
 
 /**
  * @brief This primitive like type should be used in function return values to
@@ -23,7 +22,7 @@
  */
 typedef enum {
     SUCCESS = 0,
-    EOF_ERR = EOF,
+    EOF_ERR = -1,
     ERROR,
     NUL_ERR,
     ALLOC_ERR,
@@ -36,4 +35,4 @@ typedef enum {
     CRITICAL_ERR,
 } status_t;
 
-#endif
+#endif // TAD_TYPES_H_INCLUDED

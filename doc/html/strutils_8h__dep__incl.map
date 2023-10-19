@@ -1,0 +1,9 @@
+<map id="include/utils/strutils.h" name="include/utils/strutils.h">
+<area shape="rect" id="node1" title="Header file for string utility functions." alt="" coords="95,5,257,32"/>
+<area shape="rect" id="node2" href="$strutils_8c.html" title=" " alt="" coords="5,80,139,107"/>
+<area shape="rect" id="node3" href="$main_8c.html" title=" " alt="" coords="182,229,271,256"/>
+<area shape="rect" id="node4" href="$item_8h.html" title="Header file for items stored in the Skip List." alt="" coords="232,80,379,107"/>
+<area shape="rect" id="node5" href="$item_8c.html" title=" " alt="" coords="265,155,383,181"/>
+<area shape="rect" id="node6" href="$skiplist_8h.html" title="this header declares a abstract data structure skiplist and the functions that can be used with it." alt="" coords="407,155,571,181"/>
+<area shape="rect" id="node7" href="$skiplist_8c.html" title="Implementation of a Skip List data structure." alt="" coords="422,229,557,256"/>
+</map>

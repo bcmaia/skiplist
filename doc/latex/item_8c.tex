@@ -1,0 +1,313 @@
+\hypertarget{item_8c}{}\doxysection{src/tads/item.c File Reference}
+\label{item_8c}\index{src/tads/item.c@{src/tads/item.c}}
+{\ttfamily \#include \char`\"{}tads/item.\+h\char`\"{}}\newline
+Include dependency graph for item.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{item_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structentry__t}{entry\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em And dictionary entry. This is a stack type to store the word string and the description string. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct__item__s}{\+\_\+item\+\_\+s}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$ \mbox{\hyperlink{item_8c_a29d6907d29ec0258c0f959c14a2cfba9}{item\+\_\+from\+\_\+entry}} (const \mbox{\hyperlink{structentry__t}{entry\+\_\+t}} entry)
+\begin{DoxyCompactList}\small\item\em Creates a new item on the heap and returns a ptr to it. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$ \mbox{\hyperlink{item_8c_ab567a2e79950d3855f7f885e650010cd}{item\+\_\+from\+\_\+strings}} (const char w\mbox{[}$\,$\mbox{]}, const char d\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em Creates a item based on two strings. \end{DoxyCompactList}\item 
+status\+\_\+t \mbox{\hyperlink{item_8c_aab6bb47f211753afe31507ae43cb3b1e}{read\+\_\+word}} (char s\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em this will read a word, saving it to the s buffer. A word may not containg any white space. Leading white spaces will be ignored. \end{DoxyCompactList}\item 
+status\+\_\+t \mbox{\hyperlink{item_8c_a039161801b438d334f97035ff24f9b0a}{read\+\_\+description}} (char s\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em this will read the description, saving it to the s buffer. The description may containg white spaces. Leading and trailing white spaces will be ignored/removed. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$ \mbox{\hyperlink{item_8c_aa9bd260acbd6a1a26c9140193748d6c1}{item\+\_\+new}} (void)
+\begin{DoxyCompactList}\small\item\em Creates a new item on the heap and returns a ptr to it. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{item_8c_ae3e39c3276bc99e4549b92f78887ee99}{item\+\_\+del}} (\mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$$\ast$item)
+\begin{DoxyCompactList}\small\item\em deletes \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{item_8c_a5323e2835c111229ca672ebc6fa08241}{item\+\_\+raw\+\_\+cmp}} (const \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$item\+\_\+1, const \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$item\+\_\+2)
+\begin{DoxyCompactList}\small\item\em Compares two itens. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{item_8c_ac566c04a08e748fad380ec716ab0a9b7}{item\+\_\+cmp}} (const \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$item\+\_\+1, const \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$item\+\_\+2)
+\begin{DoxyCompactList}\small\item\em Compares two itens. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{item_8c_aa8e2a6f3aa8942e2dbee4bec831fcffc}{item\+\_\+print}} (const \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$item)
+\begin{DoxyCompactList}\small\item\em Prints an item. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{item_8c_a73da8591dbd1a6661e2aafd454d795b9}{item\+\_\+print\+\_\+word}} (const \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$item)
+\begin{DoxyCompactList}\small\item\em prints the word atribute found in the item entry. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{item_8c_ab1e428dad2bc84462a6c5968d87e08c0}{item\+\_\+print\+\_\+description}} (const \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$item)
+\begin{DoxyCompactList}\small\item\em prints the description atribute found in the item entry. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$ \mbox{\hyperlink{item_8c_aea5c2cba616757c98b85be1b85c6df14}{item\+\_\+read}} (void)
+\begin{DoxyCompactList}\small\item\em reads and constructs a item on the heap based on a user input from stdin. It will read an input in the format {\ttfamily \{W\} \{D\}}, where W is a string with no white space and D is a string that can include white spaces. A new line \char`\"{}\textbackslash{}n\char`\"{} will determine the end of the reading process. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$ \mbox{\hyperlink{item_8c_ae74738feb63bc2bfb723b348bc285384}{item\+\_\+read\+\_\+word}} (void)
+\begin{DoxyCompactList}\small\item\em Reads a word from stdin and returns a pointer to a new item with the word as its word atribute. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{item_8c_ab8a7dd953193fe3cad382533bf135e11}{item\+\_\+raw\+\_\+char\+\_\+cmp}} (const \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$item, const char c)
+\begin{DoxyCompactList}\small\item\em Compares the first character of the word with the given char. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{item_8c_a167e5945fe35432c41639dbd9bdf83ea}{item\+\_\+raw\+\_\+update}} (\mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$destiny, const \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$reference)
+\begin{DoxyCompactList}\small\item\em Updates the destiny item with the reference item. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{item_8c_ac566c04a08e748fad380ec716ab0a9b7}\label{item_8c_ac566c04a08e748fad380ec716ab0a9b7}} 
+\index{item.c@{item.c}!item\_cmp@{item\_cmp}}
+\index{item\_cmp@{item\_cmp}!item.c@{item.c}}
+\doxysubsubsection{\texorpdfstring{item\_cmp()}{item\_cmp()}}
+{\footnotesize\ttfamily int item\+\_\+cmp (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$}]{item\+\_\+1,  }\item[{const \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$}]{item\+\_\+2 }\end{DoxyParamCaption})}
+
+
+
+Compares two itens. 
+
+It is almost just a wrapper around strcmp; but it checks if the pointers are null.
+
+
+\begin{DoxyParams}{Parameters}
+{\em item\+\_\+1} & ptr to an item. \\
+\hline
+{\em item\+\_\+2} & ptr to an item. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int y. y = 0 for equal items. y $<$ 0 when item\+\_\+2 is ordered alfabatically after item\+\_\+1 and y $>$ 0 otherwise. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{item_8c_ae3e39c3276bc99e4549b92f78887ee99}\label{item_8c_ae3e39c3276bc99e4549b92f78887ee99}} 
+\index{item.c@{item.c}!item\_del@{item\_del}}
+\index{item\_del@{item\_del}!item.c@{item.c}}
+\doxysubsubsection{\texorpdfstring{item\_del()}{item\_del()}}
+{\footnotesize\ttfamily void item\+\_\+del (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$$\ast$}]{item }\end{DoxyParamCaption})}
+
+
+
+deletes 
+
+
+\begin{DoxyParams}{Parameters}
+{\em item} & a pointer to the item. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{item_8c_a29d6907d29ec0258c0f959c14a2cfba9}\label{item_8c_a29d6907d29ec0258c0f959c14a2cfba9}} 
+\index{item.c@{item.c}!item\_from\_entry@{item\_from\_entry}}
+\index{item\_from\_entry@{item\_from\_entry}!item.c@{item.c}}
+\doxysubsubsection{\texorpdfstring{item\_from\_entry()}{item\_from\_entry()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$ item\+\_\+from\+\_\+entry (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structentry__t}{entry\+\_\+t}}}]{entry }\end{DoxyParamCaption})}
+
+
+
+Creates a new item on the heap and returns a ptr to it. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em entry} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Item$\ast$
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+\+: now you have ownership of the item. 
+\end{DoxyWarning}
+\mbox{\Hypertarget{item_8c_ab567a2e79950d3855f7f885e650010cd}\label{item_8c_ab567a2e79950d3855f7f885e650010cd}} 
+\index{item.c@{item.c}!item\_from\_strings@{item\_from\_strings}}
+\index{item\_from\_strings@{item\_from\_strings}!item.c@{item.c}}
+\doxysubsubsection{\texorpdfstring{item\_from\_strings()}{item\_from\_strings()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$ item\+\_\+from\+\_\+strings (\begin{DoxyParamCaption}\item[{const char}]{w\mbox{[}$\,$\mbox{]},  }\item[{const char}]{d\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+
+
+Creates a item based on two strings. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em w} & a ptr to the string that will be the word with space allocated to, at least MAX\+\_\+\+WORD\+\_\+\+SIZE bytes. \\
+\hline
+{\em d} & a ptr to the string that will be the description with space allocated to, at least MAX\+\_\+\+DESCRIPTION\+\_\+\+SIZE bytes. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Item$\ast$ a pointer WITH OWNERSHIP to a new item. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{item_8c_aa9bd260acbd6a1a26c9140193748d6c1}\label{item_8c_aa9bd260acbd6a1a26c9140193748d6c1}} 
+\index{item.c@{item.c}!item\_new@{item\_new}}
+\index{item\_new@{item\_new}!item.c@{item.c}}
+\doxysubsubsection{\texorpdfstring{item\_new()}{item\_new()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}}$\ast$ item\+\_\+new (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Creates a new item on the heap and returns a ptr to it. 
+
+\begin{DoxyReturn}{Returns}
+a pointer to the item. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{item_8c_aa8e2a6f3aa8942e2dbee4bec831fcffc}\label{item_8c_aa8e2a6f3aa8942e2dbee4bec831fcffc}} 
+\index{item.c@{item.c}!item\_print@{item\_print}}
+\index{item\_print@{item\_print}!item.c@{item.c}}
+\doxysubsubsection{\texorpdfstring{item\_print()}{item\_print()}}
+{\footnotesize\ttfamily void item\+\_\+print (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$}]{item }\end{DoxyParamCaption})}
+
+
+
+Prints an item. 
+
+Receives a pointer to an item and prints the word and the description, separated by a space.
+
+
+\begin{DoxyParams}{Parameters}
+{\em item} & ptr to an item. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{item_8c_ab1e428dad2bc84462a6c5968d87e08c0}\label{item_8c_ab1e428dad2bc84462a6c5968d87e08c0}} 
+\index{item.c@{item.c}!item\_print\_description@{item\_print\_description}}
+\index{item\_print\_description@{item\_print\_description}!item.c@{item.c}}
+\doxysubsubsection{\texorpdfstring{item\_print\_description()}{item\_print\_description()}}
+{\footnotesize\ttfamily void item\+\_\+print\+\_\+description (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$}]{item }\end{DoxyParamCaption})}
+
+
+
+prints the description atribute found in the item entry. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em item} & ptr to the item. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{item_8c_a73da8591dbd1a6661e2aafd454d795b9}\label{item_8c_a73da8591dbd1a6661e2aafd454d795b9}} 
+\index{item.c@{item.c}!item\_print\_word@{item\_print\_word}}
+\index{item\_print\_word@{item\_print\_word}!item.c@{item.c}}
+\doxysubsubsection{\texorpdfstring{item\_print\_word()}{item\_print\_word()}}
+{\footnotesize\ttfamily void item\+\_\+print\+\_\+word (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$}]{item }\end{DoxyParamCaption})}
+
+
+
+prints the word atribute found in the item entry. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em item} & ptr to the item. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{item_8c_ab8a7dd953193fe3cad382533bf135e11}\label{item_8c_ab8a7dd953193fe3cad382533bf135e11}} 
+\index{item.c@{item.c}!item\_raw\_char\_cmp@{item\_raw\_char\_cmp}}
+\index{item\_raw\_char\_cmp@{item\_raw\_char\_cmp}!item.c@{item.c}}
+\doxysubsubsection{\texorpdfstring{item\_raw\_char\_cmp()}{item\_raw\_char\_cmp()}}
+{\footnotesize\ttfamily int item\+\_\+raw\+\_\+char\+\_\+cmp (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$}]{item,  }\item[{const char}]{c }\end{DoxyParamCaption})}
+
+
+
+Compares the first character of the word with the given char. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em item} & a pointer to the item, \\
+\hline
+{\em c} & the char to be compared. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int if($>$0) =$>$ item-\/$>$val.\+word\mbox{[}0\mbox{]} $>$ c, if(0) =$>$ item-\/$>$val.\+word\mbox{[}0\mbox{]} == c, if($<$0) =$>$ item-\/$>$val.\+word\mbox{[}0\mbox{]} $<$ c 
+\end{DoxyReturn}
+\mbox{\Hypertarget{item_8c_a5323e2835c111229ca672ebc6fa08241}\label{item_8c_a5323e2835c111229ca672ebc6fa08241}} 
+\index{item.c@{item.c}!item\_raw\_cmp@{item\_raw\_cmp}}
+\index{item\_raw\_cmp@{item\_raw\_cmp}!item.c@{item.c}}
+\doxysubsubsection{\texorpdfstring{item\_raw\_cmp()}{item\_raw\_cmp()}}
+{\footnotesize\ttfamily int item\+\_\+raw\+\_\+cmp (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$}]{item\+\_\+1,  }\item[{const \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$}]{item\+\_\+2 }\end{DoxyParamCaption})}
+
+
+
+Compares two itens. 
+
+It is almost just a wrapper around strcmp. Keep in mind it does not check if the pointers are null.
+
+
+\begin{DoxyParams}{Parameters}
+{\em item\+\_\+1} & ptr to an item. \\
+\hline
+{\em item\+\_\+2} & ptr to an item. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int y. y = 0 for equal items. y $<$ 0 when item\+\_\+2 is ordered alfabatically after item\+\_\+1 and y $>$ 0 otherwise. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{item_8c_a167e5945fe35432c41639dbd9bdf83ea}\label{item_8c_a167e5945fe35432c41639dbd9bdf83ea}} 
+\index{item.c@{item.c}!item\_raw\_update@{item\_raw\_update}}
+\index{item\_raw\_update@{item\_raw\_update}!item.c@{item.c}}
+\doxysubsubsection{\texorpdfstring{item\_raw\_update()}{item\_raw\_update()}}
+{\footnotesize\ttfamily void item\+\_\+raw\+\_\+update (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$}]{destiny,  }\item[{const \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}} $\ast$}]{reference }\end{DoxyParamCaption})}
+
+
+
+Updates the destiny item with the reference item. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em destiny} & ptr to the item that will be updated. \\
+\hline
+{\em reference} & ptr to the item that will be used as reference. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{item_8c_aea5c2cba616757c98b85be1b85c6df14}\label{item_8c_aea5c2cba616757c98b85be1b85c6df14}} 
+\index{item.c@{item.c}!item\_read@{item\_read}}
+\index{item\_read@{item\_read}!item.c@{item.c}}
+\doxysubsubsection{\texorpdfstring{item\_read()}{item\_read()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}}$\ast$ item\+\_\+read (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+reads and constructs a item on the heap based on a user input from stdin. It will read an input in the format {\ttfamily \{W\} \{D\}}, where W is a string with no white space and D is a string that can include white spaces. A new line \char`\"{}\textbackslash{}n\char`\"{} will determine the end of the reading process. 
+
+\begin{DoxyReturn}{Returns}
+Item$\ast$ 
+\end{DoxyReturn}
+\mbox{\Hypertarget{item_8c_ae74738feb63bc2bfb723b348bc285384}\label{item_8c_ae74738feb63bc2bfb723b348bc285384}} 
+\index{item.c@{item.c}!item\_read\_word@{item\_read\_word}}
+\index{item\_read\_word@{item\_read\_word}!item.c@{item.c}}
+\doxysubsubsection{\texorpdfstring{item\_read\_word()}{item\_read\_word()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{item_8h_aa3baf16dec9854a9f37f7b1e1e4bd086}{Item}}$\ast$ item\+\_\+read\+\_\+word (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Reads a word from stdin and returns a pointer to a new item with the word as its word atribute. 
+
+\begin{DoxyReturn}{Returns}
+Item$\ast$ a pointer to a new item with the word as its word atribute. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{item_8c_a039161801b438d334f97035ff24f9b0a}\label{item_8c_a039161801b438d334f97035ff24f9b0a}} 
+\index{item.c@{item.c}!read\_description@{read\_description}}
+\index{read\_description@{read\_description}!item.c@{item.c}}
+\doxysubsubsection{\texorpdfstring{read\_description()}{read\_description()}}
+{\footnotesize\ttfamily status\+\_\+t read\+\_\+description (\begin{DoxyParamCaption}\item[{char}]{s\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+
+
+this will read the description, saving it to the s buffer. The description may containg white spaces. Leading and trailing white spaces will be ignored/removed. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em s} & output buffer, passed as argument. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+status\+\_\+t a code for the resulting status of the function execution. It can only be {\ttfamily SUCCESS}, {\ttfamily EOF\+\_\+\+ERR} or {\ttfamily TOO\+\_\+\+MUCH\+\_\+\+ERR} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{item_8c_aab6bb47f211753afe31507ae43cb3b1e}\label{item_8c_aab6bb47f211753afe31507ae43cb3b1e}} 
+\index{item.c@{item.c}!read\_word@{read\_word}}
+\index{read\_word@{read\_word}!item.c@{item.c}}
+\doxysubsubsection{\texorpdfstring{read\_word()}{read\_word()}}
+{\footnotesize\ttfamily status\+\_\+t read\+\_\+word (\begin{DoxyParamCaption}\item[{char}]{s\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+
+
+this will read a word, saving it to the s buffer. A word may not containg any white space. Leading white spaces will be ignored. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em s} & output buffer, passed as argument. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+status\+\_\+t a code for the resulting status of the function execution. It can only be {\ttfamily SUCCESS}, {\ttfamily EOF\+\_\+\+ERR} or {\ttfamily TOO\+\_\+\+MUCH\+\_\+\+ERR} 
+\end{DoxyReturn}

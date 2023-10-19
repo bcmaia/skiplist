@@ -63,7 +63,7 @@
 # Compiler and compiler flags
 PROGRAM_NAME := myapp
 CC := gcc
-CCFLAGS := -Wall -Wextra -pedantic
+CCFLAGS := -Wall
 LDFLAGS :=
 STD_MODE := debug
 VALGRIND_FLAGS := --leak-check=full --show-leak-kinds=all -s
@@ -87,7 +87,7 @@ MODE := $(STD_MODE)
 TARGET_ROOT_DIR := target
 
 DEBUG_CCFLAGS := -O0 -g -ggdb3 -DDEBUG
-RELEASE_CCFLAGS := -O3 -DNDEBUG -pedantic -Werror -DRELEASE
+RELEASE_CCFLAGS := -O3 -DNDEBUG -Wextra -pedantic -Werror -DRELEASE
 
 ifneq ($(wildcard bundle-force-release.txt),)
 	RELEASE := true

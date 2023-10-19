@@ -1,13 +1,11 @@
 /**
  * @file item.h
- * @author your name (you@domain.com)
- * @brief 
- * @version 0.1
- * @date 2023-10-09
- * 
- * @copyright Copyright (c) 2023
- * 
+ * @brief Header file for items stored in the Skip List.
+ *
+ * This header defines the structure and functions for the items stored
+ * in the Skip List data structure. Items represent the data stored in the list.
  */
+
 
 #ifndef ITEM_H_DEFINED
 #define ITEM_H_DEFINED
@@ -15,8 +13,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "tads/types.h"
-#include "tads/constants.h"
+#include "tads/tad_types.h"
+#include "tads/tad_constants.h"
 #include "utils/strutils.h"
 
 /**

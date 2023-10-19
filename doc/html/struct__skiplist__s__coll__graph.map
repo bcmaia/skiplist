@@ -1,0 +1,6 @@
+<map id="_skiplist_s" name="_skiplist_s">
+<area shape="rect" id="node1" title="Skip List data structure." alt="" coords="5,276,96,303"/>
+<area shape="rect" id="node2" href="$struct__node__s.html" title="Node structure used in the Skip List." alt="" coords="13,185,88,212"/>
+<area shape="rect" id="node3" href="$struct__item__s.html" title=" " alt="" coords="14,95,87,121"/>
+<area shape="rect" id="node4" href="$structentry__t.html" title="And dictionary entry. This is a stack type to store the word string and the description string." alt="" coords="17,5,85,32"/>
+</map>
