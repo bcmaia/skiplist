@@ -27,17 +27,24 @@
 //=================|    Constants   |==========================================/
 //=============================================================================/
 
+// Defines the probability p that is used to model the distribution of the level
+// of a new node being inserted on the skiplist.
 #define SKIPLIST_PROB (0.5)
+
+// If this is set to 1, then the skiplist will be limited to never increase its
+// total height (the max level) by more than one at each insersion.
 #define RAISE_ONLY_ONCE (0)
 
-// NOTE (b): you can choose to define SKIPLIST_MAX_HEIGHT and/or
-// SKIPLIST_MAX_LENGTH or not.
+// You can choose to define SKIPLIST_MAX_HEIGHT and/or SKIPLIST_MAX_LENGTH. If
+// defined, they will act as a hardlimit. If not defined, lenght will be limited
+// by memory and height by one billion (since we cannot use limits.h). 
 // #define SKIPLIST_MAX_HEIGHT (128)
 // #define SKIPLIST_MAX_LENGTH (1024)
 
 //=============================================================================/
 //=================|    Types     |============================================/
 //=============================================================================/
+
 /**
  * @brief An incomplete wrapper for the Skiplist structure.
  *
@@ -83,6 +90,21 @@ void skiplist_del(SkipList **skiplist);
  */
 status_t skiplist_insert(SkipList *skiplist, Item *item);
 
+/**
+ * @brief Removes an item from the skiplist.
+ *
+ * @param skiplist A pointer to a skiplist.
+ * @param item A pointer to the item that will be used as reference in the
+ * search for the correct item to be removed.
+ * @return Item* The removed item (with ownership) or NULL if it was not found
+ * or if an error ocurred.
+ *
+ * @note it is up to you to delete the returned item.
+ * @note the returned ptr and the item parameter ptr may be the same, but the
+ * probabily are diferrent. If the item ptr is aready in the list (not the item
+ * value, the ptr), then the pointers are going to be equal. Keep that in mind
+ * to avoid double freeing the memory.
+ */
 Item *skiplist_remove(SkipList *skiplist, Item *item);
 
 /**
@@ -95,6 +117,14 @@ Item *skiplist_remove(SkipList *skiplist, Item *item);
  */
 Item *skiplist_search(const SkipList *skiplist, const Item *item);
 
+/**
+ * @brief Prints all the itens of the skiplist that starts with the character c.
+ *
+ * @param skiplist ptr to the skiplist.
+ * @param c the character we are interested on.
+ * @return status_t \c SUCCESS for a successiful print, \c ERROR if any errors
+ * occurr.
+ */
 status_t skiplist_print(const SkipList *skiplist, const char c);
 
 /**
@@ -139,8 +169,36 @@ size_t skiplist_length(const SkipList *skiplist);
  */
 size_t skiplist_height(const SkipList *skiplist);
 
-
+/**
+ * @brief Updates the value of an item in a skiplist.
+ *
+ * Searches an skiplist for an item and updates it to a new value if it was
+ * found.
+ *
+ * @param skiplist a ptr to the skiplist.
+ * @param item the item we are searching and its new value.
+ * @return status_t \c SUCCESS if the item was found and updated to a new value,
+ * \c NUL_ERR if any critial pointer passed to the function is NULL, \c
+ * ALLOC_ERR if there was an issue allocating memory during the execution of the
+ * program, \c NOT_FOUND_ERR if the item is not found on the skiplist, \c ERROR
+ * if an unidentified error ocurred during the trace and search phase.
+ *
+ * @note Keep in mind an item has a key, which is used to identify it, and a
+ * value. The item you pass as a parameter should have a key to an item already
+ * on the skiplist and a new value.
+ */
 status_t skiplist_update(SkipList *skiplist, Item *item);
-_Bool skiplist_debug_validate(const SkipList *skiplist) ;
+
+/**
+ * @brief Checks if the current configurantion of a skiplist is valid and has no
+ * errors.
+ *
+ * Use this to debug the skiplist
+ *
+ * @param skiplist a ptr to the skiplist.
+ * @return _Bool \c 1 if the skiplist if valid, \c 0 if the skiplist has one or
+ * more errors (invalid).
+ */
+_Bool skiplist_debug_validate(const SkipList *skiplist);
 
 #endif // SKIPLIST_H_DEFINED
