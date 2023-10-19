@@ -384,7 +384,6 @@ status_t skiplist_print(const SkipList *skiplist, const char c) {
         item_print(sentinel->item);
         printf("\n");
         sentinel = sentinel->next;
-        // count++;
     }
 
     // return 0 == count ? ERROR : SUCCESS; // NOTE: is this right?
