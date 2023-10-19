@@ -379,13 +379,16 @@ status_t skiplist_print(const SkipList *skiplist, const char c) {
     while (sentinel && item_raw_char_cmp(sentinel->item, c) < 0)
         sentinel = sentinel->next;
 
+    size_t counter = 0;
     while (sentinel && item_raw_char_cmp(sentinel->item, c) == 0) {
         item_print(sentinel->item);
         printf("\n");
         sentinel = sentinel->next;
+        counter++;
     }
 
-    // return 0 == count ? ERROR : SUCCESS; // NOTE: is this right?
+    if (0 == counter) printf("NAO HA PALAVRAS INICIADAS POR %c\n", c);
+
     return SUCCESS;
 }
 
@@ -467,7 +470,6 @@ _Bool skiplist_includes(const SkipList *skiplist, const Item *item) {
 }
 
 static inline Node *mainlane_search(Node *sentinel, const Item *item) {
-    // if (NULL == sentinel) return NULL;
     while (sentinel && item_cmp(sentinel->item, item) < 0) {
         sentinel = sentinel->next;
     }
@@ -537,15 +539,17 @@ Node **skiplist_raw_trace(SkipList *skiplist, Item *item) {
 
 /**
  * @brief Inserts a item on the start of the skiplist.
- * 
+ *
  * @param skiplist ptr to the skiplist.
- * @param item ptr to the item that will be inserted. You lose ownership on a successiful push.
- * @return status_t \c SUCCESS if we succeded 
+ * @param item ptr to the item that will be inserted. You lose ownership on a
+ * successiful push.
+ * @return status_t \c SUCCESS if we succeded on the push, \c ALLOC_ERR if we
+ * fail to allocate memory for the new node.
  */
 static status_t skiplist_raw_push_front(SkipList *skiplist, Item *item) {
     // New top
     Node *new_node = node_new((Node){.item = item, .next = skiplist->top});
-    if (NULL == new_node) return NUL_ERR; // Error handling
+    if (NULL == new_node) return ALLOC_ERR; // Error handling
     Node *sentinel = skiplist->top->down;
     skiplist->top = new_node;
 
@@ -606,7 +610,7 @@ void skiplist_trim(SkipList *skiplist) {
 
 /**
  * @brief removes the first element of the skiplist.
- * 
+ *
  * @param skiplist ptr to skiplist.
  * @return Item* ptr to the the removed item or NULL. You have ownership.
  */
