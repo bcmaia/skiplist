@@ -322,10 +322,9 @@ Item *skiplist_remove(SkipList *skiplist, Item *item) {
     // Getting node trace
     Node **updates = skiplist_raw_trace(skiplist, item);
     if (NULL == updates) return NULL; // err handling
-    
+
     // Error handling
-    if (NULL == updates[h - 1] ||
-        NULL == updates[h - 1]->next ||
+    if (NULL == updates[h - 1] || NULL == updates[h - 1]->next ||
         NULL == updates[h - 1]->next->item) {
         free(updates);
         return NULL;
@@ -342,7 +341,7 @@ Item *skiplist_remove(SkipList *skiplist, Item *item) {
         if (NULL == updates[i] || NULL == updates[i]->next) continue;
 
         Node *temp = updates[i]->next->next;
-    
+
         *(updates[i]->next) = (Node){0};
         node_shallow_del(updates[i]->next);
         updates[i]->next = NULL;
@@ -380,13 +379,16 @@ status_t skiplist_print(const SkipList *skiplist, const char c) {
     while (sentinel && item_raw_char_cmp(sentinel->item, c) < 0)
         sentinel = sentinel->next;
 
+    size_t counter = 0;
     while (sentinel && item_raw_char_cmp(sentinel->item, c) == 0) {
         item_print(sentinel->item);
         printf("\n");
         sentinel = sentinel->next;
+        counter++;
     }
 
-    // return 0 == count ? ERROR : SUCCESS; // NOTE: is this right?
+    if (0 == counter) printf("NAO HA PALAVRAS INICIADAS POR %c\n", c);
+
     return SUCCESS;
 }
 
@@ -468,7 +470,6 @@ _Bool skiplist_includes(const SkipList *skiplist, const Item *item) {
 }
 
 static inline Node *mainlane_search(Node *sentinel, const Item *item) {
-    // if (NULL == sentinel) return NULL;
     while (sentinel && item_cmp(sentinel->item, item) < 0) {
         sentinel = sentinel->next;
     }
@@ -486,7 +487,6 @@ static inline Node *fastlane_search(Node *sentinel, const Item *item) {
 
 static inline Node *express_search(Node *sentinel, const Item *item) {
     // WARNING: We assume `NULL != sentinel` and `NULL != item`
-    // if (NULL == sentinel) return NULL;
     if (NULL == sentinel) return NULL;
     while (sentinel->down) { // while sentinel.level > 0
         while (sentinel->next && item_cmp(sentinel->next->item, item) < 0) {
@@ -498,12 +498,13 @@ static inline Node *express_search(Node *sentinel, const Item *item) {
 }
 
 /**
- * @brief
+ * @brief Searched the skiplist and returns every node, one for each level, that
+ * preceeds a node equal o grater than the target item.
  *
  * @note this function assumes that skiplist and item are valid pointers and it
  * also assumes that the list is not empty.
  *
- * @param skiplist
+ * @param skiplist a ptr to the skiplist.
  * @param item
  * @return Node**
  */
@@ -536,10 +537,19 @@ Node **skiplist_raw_trace(SkipList *skiplist, Item *item) {
     return updates;
 }
 
+/**
+ * @brief Inserts a item on the start of the skiplist.
+ *
+ * @param skiplist ptr to the skiplist.
+ * @param item ptr to the item that will be inserted. You lose ownership on a
+ * successiful push.
+ * @return status_t \c SUCCESS if we succeded on the push, \c ALLOC_ERR if we
+ * fail to allocate memory for the new node.
+ */
 static status_t skiplist_raw_push_front(SkipList *skiplist, Item *item) {
     // New top
     Node *new_node = node_new((Node){.item = item, .next = skiplist->top});
-    if (NULL == new_node) return NUL_ERR; // Error handling
+    if (NULL == new_node) return ALLOC_ERR; // Error handling
     Node *sentinel = skiplist->top->down;
     skiplist->top = new_node;
 
@@ -570,27 +580,40 @@ static status_t skiplist_raw_push_front(SkipList *skiplist, Item *item) {
         sentinel = sentinel->down;
     }
 
-    // long long levels = ((long long)skiplist_random_levels()) - ((long
-    // long)skiplist->height); for (; levels > 0; levels--) {
-
-    // }
-
     skiplist->length++;
     return SUCCESS;
 }
 
+/**
+ * @brief Reduces the height of the skiplist if it has small lanes on the top.
+ *
+ * Every lane above the main lane (the bottom lane, aka: the true lane), if they
+ * exist, should have at least 2 itens. Otherwise, there would be no peformance
+ * gain provided by the lane ;)
+ *
+ * @param skiplist a pointer to the skiplist.
+ */
 void skiplist_trim(SkipList *skiplist) {
-    if (NULL == skiplist || NULL == skiplist->top) return;
-    while (skiplist->height > 1 && NULL == skiplist->top->next) {
+    if (NULL == skiplist || NULL == skiplist->top) return; // err handling
 
+    // Loop from top to bottom untill we reach the bottom or until a valid top
+    // lane is stabilished.
+    while (skiplist->height > 1 && NULL == skiplist->top->next) {
+        // Destroy the lane
         Node *temp = skiplist->top->down;
         node_shallow_del(skiplist->top);
         skiplist->top = temp;
 
-        skiplist->height--;
+        skiplist->height--; // dec the height
     }
 }
 
+/**
+ * @brief removes the first element of the skiplist.
+ *
+ * @param skiplist ptr to skiplist.
+ * @return Item* ptr to the the removed item or NULL. You have ownership.
+ */
 Item *skiplist_raw_pop_front(SkipList *skiplist) {
     Item *return_item = skiplist->top->item;
     Node *sentinel = skiplist->top;
@@ -613,17 +636,20 @@ Item *skiplist_raw_pop_front(SkipList *skiplist) {
     // Tracing next
     size_t h = skiplist->height;
     Node **updates = (Node **)calloc(h, sizeof(Node *));
-    size_t depth = 0;
+    if (NULL == updates) return NULL; // err handling
 
+    // Going down and tracing
+    size_t depth = 0;
     while (sentinel) {
         updates[depth++] = sentinel->next;
         sentinel = sentinel->down;
     }
 
+    // The new start of the main lane (bottom lane):
     Node *new_bottom = updates[h - 1];
-    if (NULL == new_bottom) {
+
+    if (NULL == new_bottom) { // err handling
         free(updates);
-        // printf("TRACE FAILURE\n");
         return NULL;
     }
 
@@ -645,12 +671,6 @@ Item *skiplist_raw_pop_front(SkipList *skiplist) {
         });
     }
 
-    // Delete excess levels
-    // for (; i >= 0; i--) {
-    //     node_shallow_del(updates[i]);
-    //     skiplist->height--;
-    // }
-
     // Setting new top
     sentinel = skiplist->top;
     skiplist->top = temp;
@@ -662,12 +682,22 @@ Item *skiplist_raw_pop_front(SkipList *skiplist) {
         sentinel = temp;
     }
 
+    // Trimming the skiplist: it might be taller than needed.
     skiplist_trim(skiplist);
 
+    // Cleanup and exit
     skiplist->length--;
+    free(updates);
     return return_item;
 }
 
+/**
+ * @brief Checks if all the nodes in a column is are valid.
+ *
+ * @param n a pointer to the node.
+ * @return _Bool \c 1 if the column is valid, \c 0 if it contains one o more
+ * detectable errors.
+ */
 static _Bool valid_column(Node *n) {
     Node *sentinel = n;
     if (sentinel)
